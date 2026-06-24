@@ -1,0 +1,2089 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Campus VR - Zero Delay Sync</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"
+    />
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"
+    ></script>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #000;
+      }
+      .split-container {
+        display: flex;
+        width: 100%;
+        height: 100dvh; /* dvh fixes mobile bottom bar clipping */
+        position: relative;
+      }
+      .view-wrapper {
+        width: 50%;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+      }
+      .view {
+        width: 100%;
+        height: 100%;
+      }
+
+      .ui-overlay {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        display: flex;
+        gap: 5px;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 10px;
+        border-radius: 10px;
+      }
+      .ui-overlay button {
+        background: #fff;
+        border: none;
+        padding: 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        min-width: 40px;
+      }
+      .exit-vr {
+        background: #e74c3c !important;
+        color: white;
+        min-width: 70px !important;
+      }
+
+      /* Mobile styling repairs for VR Overlay */
+      @media (max-width: 768px) {
+        .ui-overlay {
+          bottom: 50px;
+          padding: 8px;
+          gap: 2px;
+          flex-wrap: wrap;
+          justify-content: center;
+          width: 90%;
+        }
+        .ui-overlay button {
+          padding: 6px;
+          font-size: 14px;
+          min-width: 30px;
+        }
+        .exit-vr {
+          min-width: 50px !important;
+        }
+      }
+
+      .center-divider {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        width: 2px;
+        height: 100%;
+        background: #000;
+        z-index: 500;
+      }
+
+      .chroma-vr {
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        z-index: 500;
+        max-width: 45%;
+        max-height: 50%;
+        object-fit: contain;
+        pointer-events: none;
+        display: none;
+      }
+    </style>
+    <link rel="stylesheet" href="../tour-project/style1.css" />
+  </head>
+  <body>
+    <!-- Menu Button -->
+    <div class="menu-btn" onclick="toggleSidebar()">☰ HOTSPOT</div>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <h2><span class="highlight">VITB </span>CAMPUS</h2>
+        <span class="close-btn" onclick="toggleSidebar()">✕</span>
+      </div>
+
+      <div class="menu">
+        <div
+          class="menu-item"
+          onclick="loadScene('exit 1')"
+          style="
+            background-image: url(&quot;../tour-project/MAIN ENTER.jpeg&quot;);
+          "
+        >
+          <span>Main Entrance</span>
+        </div>
+        <div
+          class="menu-item"
+          onclick="loadScene('ab front gate 2')"
+          style="background-image: url(&quot;../tour-project/VITB.jpeg&quot;)"
+        >
+          <span>ACADEMIC BLOCK 1</span>
+        </div>
+        <div
+          class="menu-item"
+          onclick="loadScene('ab2  3')"
+          style="
+            background-image: url(&quot;../tour-project/ab2 main .jpeg&quot;);
+          "
+        >
+          <span>ACADEMIC BLOCK 2</span>
+        </div>
+        <div
+          class="menu-item"
+          onclick="loadScene('lc 1')"
+          style="
+            background-image: url(&quot;../tour-project/ARCH PIC.jpeg&quot;);
+          "
+        >
+          <span>LC</span>
+        </div>
+        <div
+          class="menu-item"
+          onclick="loadScene('mph 1')"
+          style="background-image: url(&quot;../tour-project/mph.jpg&quot;)"
+        >
+          <span>MPH</span>
+        </div>
+        <div
+          class="menu-item"
+          onclick="loadScene('girls 3')"
+          style="
+            background-image: url(&quot;../tour-project/girls pic .jpg&quot;);
+          "
+        >
+          <span>GIRLS HOSTEL</span>
+        </div>
+        <div
+          class="menu-item"
+          onclick="loadScene('ab 15')"
+          style="background-image: url(&quot;../tour-project/FOOD.jpeg&quot;)"
+        >
+          <span>FOOD COURT</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const menuBtn = document.querySelector(".menu-btn");
+        sidebar.classList.toggle("active");
+        if (sidebar.classList.contains("active")) {
+          menuBtn.style.display = "none";
+        } else {
+          menuBtn.style.display = "block";
+        }
+      }
+
+      function loadScene(sceneId) {
+        if (typeof viewerLeft !== "undefined") {
+          viewerLeft.loadScene(sceneId);
+        }
+      }
+    </script>
+
+    <div class="split-container">
+      <div class="view-wrapper">
+        <div id="viewLeft" class="view"></div>
+        <canvas id="chromaKeyCanvasLeft" class="chroma-vr"></canvas>
+        <div class="ui-overlay">
+          <button onclick="pan('left')">⟨</button>
+          <button onclick="pan('right')">⟩</button>
+          <button onclick="pan('up')">↑</button>
+          <button onclick="pan('down')">↓</button>
+          <button onclick="zoomIn()">+</button>
+          <button onclick="zoomOut()">−</button>
+          <button
+            class="exit-vr"
+            onclick="window.location.href = '../tour-project/campus tour.html'"
+          >
+            EXIT
+          </button>
+        </div>
+      </div>
+
+      <div class="center-divider"></div>
+
+      <div class="view-wrapper">
+        <div id="viewRight" class="view"></div>
+        <canvas id="chromaKeyCanvasRight" class="chroma-vr"></canvas>
+        <div class="ui-overlay">
+          <button onclick="pan('left')">⟨</button>
+          <button onclick="pan('right')">⟩</button>
+          <button onclick="pan('up')">↑</button>
+          <button onclick="pan('down')">↓</button>
+          <button onclick="zoomIn()">+</button>
+          <button onclick="zoomOut()">−</button>
+          <button
+            class="exit-vr"
+            onclick="window.location.href = '../tour-project/campus tour.html'"
+          >
+            EXIT
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Video Element for Chroma Key -->
+    <video
+      id="videoElement"
+      playsinline
+      crossorigin="anonymous"
+      style="display: none"
+    >
+      <source
+        src="../tour-project/videos/Video Project 1 (1).mp4"
+        type="video/mp4"
+      />
+    </video>
+    <video
+      id="amanVideo"
+      playsinline
+      crossorigin="anonymous"
+      style="display: none"
+    >
+      <source
+        src="../tour-project/videos/ab1 with green croped.mp4"
+        type="video/mp4"
+      />
+    </video>
+    <video
+      id="mphVideo"
+      playsinline
+      crossorigin="anonymous"
+      style="display: none"
+    >
+      <source src="../tour-project/videos/mph.mp4" type="video/mp4" />
+    </video>
+    <video
+      id="lcVideo"
+      playsinline
+      crossorigin="anonymous"
+      style="display: none"
+    >
+      <source src="../tour-project/videos/lc to ar .mp4" type="video/mp4" />
+    </video>
+    <video
+      id="ab2Video"
+      playsinline
+      crossorigin="anonymous"
+      style="display: none"
+    >
+      <source src="../tour-project/videos/ab2.mp4" type="video/mp4" />
+    </video>
+
+    <script>
+      var viewerLeft, viewerRight;
+      var activeViewer = "left"; // Default
+
+      function pfile(name) {
+        return "../tour-project/" + name + ".jpg";
+      }
+
+      const sceneConfig = {
+        default: {
+          firstScene: "exit 1",
+          autoLoad: true,
+          showControls: false,
+          orientationOnLoad: true,
+          hfov: 100,
+          sceneFadeDuration: 0, // Fading breaks split-screen VR
+        },
+        scenes: {
+          "exit 1": {
+            panorama: pfile("exit 1"),
+            hotSpots: [
+              {
+                pitch: -3,
+                yaw: 180,
+                type: "scene",
+                text: "To Exit 2",
+                sceneId: "exit 2",
+              },
+            ],
+          },
+          "exit 2": {
+            panorama: pfile("exit 2"),
+            yaw: 180, // Faces "Path" by default
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -8,
+                yaw: 0,
+                type: "scene",
+                text: "Back",
+                sceneId: "exit 1",
+              },
+              {
+                pitch: -5,
+                yaw: 60,
+                type: "scene",
+                text: "Flag",
+                sceneId: "flag",
+              },
+              {
+                pitch: -5,
+                yaw: -180,
+                type: "scene",
+                text: "Path",
+                sceneId: "all path",
+              },
+            ],
+          },
+          flag: {
+            panorama: pfile("flag"),
+            hotSpots: [
+              {
+                pitch: -6,
+                yaw: 180,
+                type: "scene",
+                text: "Back",
+                sceneId: "exit 2",
+              },
+            ],
+          },
+          "all path": {
+            panorama: pfile("all path"),
+            hotSpots: [
+              {
+                pitch: -15,
+                yaw: -65,
+                type: "scene",
+                text: "Back",
+                sceneId: "exit 2",
+              },
+              {
+                pitch: -6,
+                yaw: 0,
+                type: "scene",
+                text: "AB 4",
+                sceneId: "ab 4",
+              },
+              {
+                pitch: -6,
+                yaw: -180,
+                type: "scene",
+                text: "AB 3",
+                sceneId: "ab 3",
+              },
+            ],
+          },
+          "ab 3": {
+            panorama: pfile("ab 3"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Back",
+                sceneId: "all path",
+              },
+              {
+                pitch: -5,
+                yaw: -180,
+                type: "scene",
+                text: "Next: AB 2",
+                sceneId: "ab 2",
+              },
+            ],
+          },
+          "ab 2": {
+            panorama: pfile("ab 2"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab 3",
+              },
+              {
+                pitch: -5,
+                yaw: -180,
+                type: "scene",
+                text: "Next: AB 1",
+                sceneId: "ab 1",
+              },
+            ],
+          },
+          "ab 1": {
+            panorama: pfile("ab 1"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab 2",
+              },
+              {
+                pitch: -5,
+                yaw: -180,
+                type: "scene",
+                text: "To Main Mid",
+                sceneId: "main mid",
+              },
+            ],
+          },
+          "main mid": {
+            panorama: pfile("main mid"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: -100,
+                type: "scene",
+                text: "To AB 1",
+                sceneId: "ab 1",
+              },
+              {
+                pitch: -5,
+                yaw: 70,
+                type: "scene",
+                text: "Parcel 1",
+                sceneId: "parcel 1",
+              },
+              {
+                pitch: -5,
+                yaw: 10,
+                type: "scene",
+                text: "Girls 21",
+                sceneId: "girls 21",
+              },
+            ],
+          },
+          "parcel 1": {
+            panorama: pfile("parcel 1"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: -180,
+                type: "scene",
+                text: "Back",
+                sceneId: "main mid",
+              },
+              {
+                pitch: -5,
+                yaw: 20,
+                type: "scene",
+                text: "Parcel 2",
+                sceneId: "parcel 2",
+              },
+            ],
+          },
+          "parcel 2": {
+            panorama: pfile("parcel 2"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Back",
+                sceneId: "parcel 1",
+              },
+            ],
+          },
+          "girls 21": {
+            panorama: pfile("girls 21"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Back",
+                sceneId: "main mid",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Next",
+                sceneId: "girls 20",
+              },
+            ],
+          },
+          "girls 20": {
+            panorama: pfile("girls 20"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "girls 21",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Next",
+                sceneId: "girls 18",
+              },
+            ],
+          },
+          "girls 18": {
+            panorama: pfile("girls 18"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "girls 20",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Next",
+                sceneId: "girls 17",
+              },
+            ],
+          },
+          "girls 17": {
+            panorama: pfile("girls 17"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "girls 18",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Next",
+                sceneId: "girls 16",
+              },
+            ],
+          },
+          "girls 16": {
+            panorama: pfile("girls 16"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "girls 17",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Next",
+                sceneId: "girls 15",
+              },
+            ],
+          },
+          "girls 15": {
+            panorama: pfile("girls 15"),
+            yaw: -90,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 90,
+                type: "scene",
+                text: "Prev",
+                sceneId: "girls 16",
+              },
+              {
+                pitch: -5,
+                yaw: -90,
+                type: "scene",
+                text: "Next",
+                sceneId: "girls 14",
+              },
+            ],
+          },
+          "girls 14": {
+            panorama: pfile("girls 14"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "girls 15",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Next",
+                sceneId: "girls 13",
+              },
+            ],
+          },
+          "girls 13": {
+            panorama: pfile("girls 13"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "girls 14",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Next",
+                sceneId: "girls 12",
+              },
+            ],
+          },
+          "girls 12": {
+            panorama: pfile("girls 12"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "girls 13",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Next",
+                sceneId: "girls 11",
+              },
+            ],
+          },
+          "girls 11": {
+            panorama: pfile("girls 11"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "girls 12",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Next",
+                sceneId: "girls 10",
+              },
+            ],
+          },
+          "girls 10": {
+            panorama: pfile("girls 10"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "girls 11",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Next",
+                sceneId: "girls 9",
+              },
+            ],
+          },
+          "girls 9": {
+            panorama: pfile("girls 9"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "girls 10",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Next",
+                sceneId: "girls 8",
+              },
+            ],
+          },
+          "girls 8": {
+            panorama: pfile("girls 8"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "girls 9",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Next",
+                sceneId: "girls 7",
+              },
+            ],
+          },
+          "girls 7": {
+            panorama: pfile("girls 7"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "girls 8",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Next",
+                sceneId: "girls 6",
+              },
+            ],
+          },
+          "girls 6": {
+            panorama: pfile("girls 6"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "girls 7",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Next",
+                sceneId: "girls 5",
+              },
+            ],
+          },
+          "girls 5": {
+            panorama: pfile("girls 5"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "girls 6",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Next",
+                sceneId: "girls 4",
+              },
+            ],
+          },
+          "girls 4": {
+            panorama: pfile("girls 4"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "girls 5",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Next",
+                sceneId: "girls 3",
+              },
+            ],
+          },
+          "girls 3": {
+            panorama: pfile("girls 3"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "girls 4",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Next",
+                sceneId: "girls 2",
+              },
+            ],
+          },
+          "girls 2": {
+            panorama: pfile("girls 2"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "girls 3",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Next",
+                sceneId: "girls 1",
+              },
+            ],
+          },
+          "girls 1": {
+            panorama: pfile("girls 1"),
+            yaw: 180,
+            pitch: 0,
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "girls 2",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Hostel",
+                sceneId: "hostel start 2",
+              },
+            ],
+          },
+          "hostel start 2": {
+            panorama: pfile("hostel start 2"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "AB 2 1",
+                sceneId: "ab2  1",
+              },
+              {
+                pitch: -5,
+                yaw: 120,
+                type: "scene",
+                text: "Back",
+                sceneId: "girls 1",
+              },
+            ],
+          },
+          "ab2  1": {
+            panorama: pfile("ab2  1"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Back",
+                sceneId: "hostel start 2",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab2  2",
+              },
+            ],
+          },
+          "ab2  2": {
+            panorama: pfile("ab2  2"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab2  1",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab2  3",
+              },
+            ],
+          },
+          "ab2  3": {
+            panorama: pfile("ab2  3"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab2  2",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab2  5",
+              },
+            ],
+          },
+          "ab2  5": {
+            panorama: pfile("ab2  5"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab2  3",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab2  6",
+              },
+            ],
+          },
+          "ab2  6": {
+            panorama: pfile("ab2  6"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab2  5",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab2  7",
+              },
+            ],
+          },
+          "ab2  7": {
+            panorama: pfile("ab2  7"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab2  6",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab2  8",
+              },
+            ],
+          },
+          "ab2  8": {
+            panorama: pfile("ab2  8"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab2  7",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab 2 gate 9",
+              },
+            ],
+          },
+          "ab 2 gate 9": {
+            panorama: pfile("ab 2 gate 9"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: -90,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab2  8",
+              },
+            ],
+          },
+          "ab 4": {
+            panorama: pfile("ab 4"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: -180,
+                type: "scene",
+                text: "Back",
+                sceneId: "all path",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab 5",
+              },
+            ],
+          },
+          "ab 5": {
+            panorama: pfile("ab 5"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab 4",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab 6",
+              },
+            ],
+          },
+          "ab 6": {
+            panorama: pfile("ab 6"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab 5",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab 7",
+              },
+              {
+                pitch: -5,
+                yaw: -90,
+                type: "scene",
+                text: "MPH",
+                sceneId: "mph 1",
+              },
+            ],
+          },
+          "mph 1": {
+            panorama: pfile("mph 1"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Back",
+                sceneId: "ab 6",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "mph 2",
+              },
+            ],
+          },
+          "mph 2": {
+            panorama: pfile("mph 2"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "mph 1",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "mph 3",
+              },
+            ],
+          },
+          "mph 3": {
+            panorama: pfile("mph 3"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "mph 2",
+              },
+              {
+                pitch: -5,
+                yaw: 80,
+                type: "scene",
+                text: "Next",
+                sceneId: "mph 4",
+              },
+            ],
+          },
+          "mph 4": {
+            panorama: pfile("mph 4"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: -90,
+                type: "scene",
+                text: "Prev",
+                sceneId: "mph 3",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Lion Park",
+                sceneId: "lion park",
+              },
+            ],
+          },
+          "lion park": {
+            panorama: pfile("lion park"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Back",
+                sceneId: "mph 4",
+              },
+            ],
+          },
+          "ab 7": {
+            panorama: pfile("ab 7"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab 6",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab 9",
+              },
+            ],
+          },
+          "ab 9": {
+            panorama: pfile("ab 9"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab 7",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab 10",
+              },
+            ],
+          },
+          "ab 10": {
+            panorama: pfile("ab 10"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab 9",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab 11",
+              },
+            ],
+          },
+          "ab 11": {
+            panorama: pfile("ab 11"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab 10",
+              },
+              {
+                pitch: -5,
+                yaw: 5,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab 12",
+              },
+            ],
+          },
+          "ab 12": {
+            panorama: pfile("ab 12"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab 11",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab 13",
+              },
+            ],
+          },
+          "ab 13": {
+            panorama: pfile("ab 13"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab 12",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab 14",
+              },
+            ],
+          },
+          "ab 14": {
+            panorama: pfile("ab 14"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab 13",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab 15",
+              },
+            ],
+          },
+          "ab 15": {
+            panorama: pfile("ab 15"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 140,
+                type: "scene",
+                text: "Gate",
+                sceneId: "ab front gate 1",
+              },
+              {
+                pitch: -5,
+                yaw: -140,
+                type: "scene",
+                text: "Back",
+                sceneId: "ab 14",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Forward",
+                sceneId: "ab 16",
+              },
+            ],
+          },
+          "ab front gate 1": {
+            panorama: pfile("ab front gate 1"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab 15",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Gate 2",
+                sceneId: "ab front gate 2",
+              },
+            ],
+          },
+          "ab front gate 2": {
+            panorama: pfile("ab front gate 2"),
+            hotSpots: [
+              {
+                pitch: 0,
+                yaw: -80,
+                type: "scene",
+                text: "Back",
+                sceneId: "ab front gate 1",
+              },
+            ],
+          },
+          "ab 16": {
+            panorama: pfile("ab 16"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Back",
+                sceneId: "ab 15",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab 17",
+              },
+            ],
+          },
+          "ab 17": {
+            panorama: pfile("ab 17"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab 16",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab 18",
+              },
+            ],
+          },
+          "ab 18": {
+            panorama: pfile("ab 18"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab 17",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab 19",
+              },
+            ],
+          },
+          "ab 19": {
+            panorama: pfile("ab 19"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 170,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab 17",
+              },
+              {
+                pitch: -5,
+                yaw: 80,
+                type: "scene",
+                text: "Back Gate",
+                sceneId: "ab back gate 3",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "LC 1",
+                sceneId: "lc 1",
+              },
+            ],
+          },
+          "ab back gate 3": {
+            panorama: pfile("ab back gate 3"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab back gate 2",
+              },
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab 19",
+              },
+            ],
+          },
+          "ab back gate 2": {
+            panorama: pfile("ab back gate 2"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab back gate 3",
+              },
+              {
+                pitch: -5,
+                yaw: 10,
+                type: "scene",
+                text: "Next",
+                sceneId: "ab back gate 1",
+              },
+            ],
+          },
+          "ab back gate 1": {
+            panorama: pfile("ab back gate 1"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "ab back gate 2",
+              },
+            ],
+          },
+          "lc 1": {
+            panorama: pfile("lc 1"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "lc 2",
+              },
+              {
+                pitch: -5,
+                yaw: -180,
+                type: "scene",
+                text: "Back",
+                sceneId: "ab 19",
+              },
+            ],
+          },
+          "lc 2": {
+            panorama: pfile("lc 2"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "lc 1",
+              },
+              {
+                pitch: -5,
+                yaw: -100,
+                type: "scene",
+                text: "Arch",
+                sceneId: "arch 1",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "lc 3",
+              },
+            ],
+          },
+          "arch 1": {
+            panorama: pfile("arch 1"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Back",
+                sceneId: "lc 2",
+              },
+            ],
+          },
+          "lc 3": {
+            panorama: pfile("lc 3"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "lc 2",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "lc 4",
+              },
+            ],
+          },
+          "lc 4": {
+            panorama: pfile("lc 4"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "lc 3",
+              },
+              {
+                pitch: -5,
+                yaw: 0,
+                type: "scene",
+                text: "Next",
+                sceneId: "lc 5",
+              },
+            ],
+          },
+          "lc 5": {
+            panorama: pfile("lc 5"),
+            hotSpots: [
+              {
+                pitch: -5,
+                yaw: 180,
+                type: "scene",
+                text: "Prev",
+                sceneId: "lc 4",
+              },
+            ],
+          },
+        },
+      };
+
+      function initViewers() {
+        // Fix navigation orientation automatically for VR
+        for (let sceneKey in sceneConfig.scenes) {
+          let scene = sceneConfig.scenes[sceneKey];
+          if (scene.hotSpots) {
+            for (let hs of scene.hotSpots) {
+              if (hs.type === "scene" && hs.sceneId) {
+                let targetScene = sceneConfig.scenes[hs.sceneId];
+                if (targetScene && targetScene.hotSpots) {
+                  let rev = targetScene.hotSpots.find(
+                    (s) => s.type === "scene" && s.sceneId === sceneKey,
+                  );
+                  if (
+                    rev &&
+                    rev.yaw !== undefined &&
+                    hs.targetYaw === undefined
+                  ) {
+                    let y = rev.yaw + 180;
+                    while (y > 180) y -= 360;
+                    while (y <= -180) y += 360;
+                    hs.targetYaw = y;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        // THE FIX: Deep clone the config so the viewers don't fight over the same DOM elements
+        const configLeft = JSON.parse(JSON.stringify(sceneConfig));
+        const configRight = JSON.parse(JSON.stringify(sceneConfig));
+
+        viewerLeft = pannellum.viewer("viewLeft", configLeft);
+        viewerRight = pannellum.viewer("viewRight", configRight);
+
+        let isChangingScene = false;
+
+        // SYNC LOOP
+        function syncLoop() {
+          if (
+            viewerLeft &&
+            viewerRight &&
+            viewerLeft.getScene() === viewerRight.getScene() &&
+            !isChangingScene
+          ) {
+            let yL = viewerLeft.getYaw(),
+              pL = viewerLeft.getPitch(),
+              hL = viewerLeft.getHfov();
+            let yR = viewerRight.getYaw(),
+              pR = viewerRight.getPitch(),
+              hR = viewerRight.getHfov();
+
+            if (activeViewer === "left" && !isNaN(yL) && !isNaN(pL)) {
+              viewerRight.setYaw(yL, false);
+              viewerRight.setPitch(pL, false);
+              viewerRight.setHfov(hL, false);
+            } else if (activeViewer === "right" && !isNaN(yR) && !isNaN(pR)) {
+              viewerLeft.setYaw(yR, false);
+              viewerLeft.setPitch(pR, false);
+              viewerLeft.setHfov(hR, false);
+            }
+          }
+          requestAnimationFrame(syncLoop);
+        }
+
+        // Set Active Viewer
+        const updateActive = (side) => {
+          activeViewer = side;
+        };
+
+        // Ensure both mouse and touch are handled safely
+        document
+          .getElementById("viewLeft")
+          .addEventListener("mousedown", () => updateActive("left"));
+        document
+          .getElementById("viewLeft")
+          .addEventListener("touchstart", () => updateActive("left"));
+
+        document
+          .getElementById("viewRight")
+          .addEventListener("mousedown", () => updateActive("right"));
+        document
+          .getElementById("viewRight")
+          .addEventListener("touchstart", () => updateActive("right"));
+
+        // Sync Scene Changes
+        viewerLeft.on("scenechange", (id) => {
+          if (isChangingScene) return;
+          if (viewerRight.getScene() !== id) {
+            isChangingScene = true;
+            // Just load the scene, let Pannellum use the default yaw/pitch from config
+            viewerRight.loadScene(id);
+            setTimeout(() => {
+              isChangingScene = false;
+            }, 300);
+          }
+        });
+
+        viewerRight.on("scenechange", (id) => {
+          if (isChangingScene) return;
+          if (viewerLeft.getScene() !== id) {
+            isChangingScene = true;
+            // Just load the scene, let Pannellum use the default yaw/pitch from config
+            viewerLeft.loadScene(id);
+            setTimeout(() => {
+              isChangingScene = false;
+            }, 300);
+          }
+        });
+
+        // Start the loop
+        requestAnimationFrame(syncLoop);
+      }
+
+      function pan(dir) {
+        let y = viewerLeft.getYaw();
+        let p = viewerLeft.getPitch();
+        if (dir === "left") y -= 15;
+        if (dir === "right") y += 15;
+        if (dir === "up") p += 15;
+        if (dir === "down") p -= 15;
+        viewerLeft.setYaw(y);
+        viewerRight.setYaw(y);
+        viewerLeft.setPitch(p);
+        viewerRight.setPitch(p);
+      }
+
+      function zoomIn() {
+        let f = viewerLeft.getHfov() - 10;
+        viewerLeft.setHfov(f);
+        viewerRight.setHfov(f);
+      }
+      function zoomOut() {
+        let f = viewerLeft.getHfov() + 10;
+        viewerLeft.setHfov(f);
+        viewerRight.setHfov(f);
+      }
+
+      initViewers();
+
+      // ============================================
+      // VR DUAL CHROMA KEY VIDEO PIPELINE
+      // ============================================
+
+      const videoElement = document.getElementById("videoElement");
+      const amanVideo = document.getElementById("amanVideo");
+      const mphVideo = document.getElementById("mphVideo");
+      const lcVideo = document.getElementById("lcVideo");
+      const ab2Video = document.getElementById("ab2Video");
+
+      const canvasLeft = document.getElementById("chromaKeyCanvasLeft");
+      const canvasRight = document.getElementById("chromaKeyCanvasRight");
+      const ctxLeft = canvasLeft.getContext("2d", { willReadFrequently: true });
+      const ctxRight = canvasRight.getContext("2d", {
+        willReadFrequently: true,
+      });
+
+      let hasExit1PlayedOnce = false;
+      let hasAmanPlayedOnce = false;
+      let hasMphPlayedOnce = false;
+      let hasLcPlayedOnce = false;
+      let hasAb2PlayedOnce = false;
+
+      let activeVideo = null;
+      let videoPlaying = false;
+
+      const allVideos = [videoElement, amanVideo, mphVideo, lcVideo, ab2Video];
+      allVideos.forEach((v) =>
+        v.addEventListener("loadedmetadata", updateCanvasSize),
+      );
+
+      function setOptimalCanvasSize() {
+        if (!activeVideo || !activeVideo.videoWidth) return;
+
+        let vw = activeVideo.videoWidth;
+        let vh = activeVideo.videoHeight;
+        const MAX_WIDTH = 640;
+
+        if (vw > MAX_WIDTH) {
+          const scale = MAX_WIDTH / vw;
+          vw = MAX_WIDTH;
+          vh = Math.floor(vh * scale);
+        }
+
+        canvasLeft.width = vw;
+        canvasLeft.height = vh;
+        canvasRight.width = vw;
+        canvasRight.height = vh;
+      }
+
+      function updateCanvasSize(e) {
+        if (activeVideo && activeVideo === e.target) {
+          setOptimalCanvasSize();
+        }
+      }
+
+      const amanScenes = [
+        "ab back gate 1",
+        "ab back gate 2",
+        "ab back gate 3",
+        "ab front gate 1",
+        "ab front gate 2",
+      ];
+      const mphScenes = ["mph 1", "mph 2", "mph 3", "mph 4", "lion park"];
+      const lcScenes = [
+        "lc 1",
+        "lc 2",
+        "lc 3",
+        "lc 4",
+        "lc 5",
+        "arch 1",
+        "arch 2",
+      ];
+      const ab2Scenes = [
+        "ab2  2",
+        "ab2  3",
+        "ab2  4",
+        "ab2  5",
+        "ab2  6",
+        "ab2  7",
+        "ab2  8",
+        "ab 2 gate 9",
+      ];
+
+      function playVideoIfReady() {
+        const currentScene = viewerLeft.getScene();
+
+        let targetVideo = null;
+        let shouldPlay = false;
+
+        if (currentScene === "exit 1" && !hasExit1PlayedOnce) {
+          targetVideo = videoElement;
+          shouldPlay = true;
+        } else if (amanScenes.includes(currentScene) && !hasAmanPlayedOnce) {
+          targetVideo = amanVideo;
+          shouldPlay = true;
+        } else if (mphScenes.includes(currentScene) && !hasMphPlayedOnce) {
+          targetVideo = mphVideo;
+          shouldPlay = true;
+        } else if (lcScenes.includes(currentScene) && !hasLcPlayedOnce) {
+          targetVideo = lcVideo;
+          shouldPlay = true;
+        } else if (ab2Scenes.includes(currentScene) && !hasAb2PlayedOnce) {
+          targetVideo = ab2Video;
+          shouldPlay = true;
+        }
+
+        if (shouldPlay && targetVideo) {
+          activeVideo = targetVideo;
+          setOptimalCanvasSize();
+
+          canvasLeft.style.display = "block";
+          canvasRight.style.display = "block";
+
+          const playPromise = activeVideo.play();
+          if (playPromise !== undefined) {
+            playPromise
+              .then(() => {
+                if (activeVideo === videoElement) hasExit1PlayedOnce = true;
+                if (activeVideo === amanVideo) hasAmanPlayedOnce = true;
+                if (activeVideo === mphVideo) hasMphPlayedOnce = true;
+                if (activeVideo === lcVideo) hasLcPlayedOnce = true;
+                if (activeVideo === ab2Video) hasAb2PlayedOnce = true;
+                videoPlaying = true;
+                startChromaKeyRendering();
+              })
+              .catch((e) => {
+                console.warn("Waiting for user interaction to unblock audio");
+                const startOnInteract = () => {
+                  if (activeVideo && viewerLeft.getScene() === currentScene) {
+                    activeVideo
+                      .play()
+                      .then(() => {
+                        if (activeVideo === videoElement)
+                          hasExit1PlayedOnce = true;
+                        if (activeVideo === amanVideo) hasAmanPlayedOnce = true;
+                        if (activeVideo === mphVideo) hasMphPlayedOnce = true;
+                        if (activeVideo === lcVideo) hasLcPlayedOnce = true;
+                        if (activeVideo === ab2Video) hasAb2PlayedOnce = true;
+                        videoPlaying = true;
+                        startChromaKeyRendering();
+                      })
+                      .catch((err) => console.error(err));
+                  }
+                  document.removeEventListener("click", startOnInteract);
+                };
+                document.addEventListener("click", startOnInteract);
+              });
+          }
+        }
+      }
+
+      // Connect to VR viewer state
+      function evaluateVideoState() {
+        const currentScene = viewerLeft.getScene();
+        const inExit1 = currentScene === "exit 1";
+        const inAmanScene = amanScenes.includes(currentScene);
+        const inMphScene = mphScenes.includes(currentScene);
+        const inLcScene = lcScenes.includes(currentScene);
+        const inAb2Scene = ab2Scenes.includes(currentScene);
+
+        if (activeVideo) {
+          const videoDoesNotBelong =
+            (activeVideo === videoElement && !inExit1) ||
+            (activeVideo === amanVideo && !inAmanScene) ||
+            (activeVideo === mphVideo && !inMphScene) ||
+            (activeVideo === lcVideo && !inLcScene) ||
+            (activeVideo === ab2Video && !inAb2Scene);
+
+          if (videoDoesNotBelong) {
+            activeVideo.pause();
+            activeVideo.currentTime = 0;
+            activeVideo = null;
+            videoPlaying = false;
+            canvasLeft.style.display = "none";
+            canvasRight.style.display = "none";
+          }
+        }
+        playVideoIfReady();
+      }
+
+      viewerLeft.on("scenechange", evaluateVideoState);
+      viewerLeft.on("load", playVideoIfReady);
+      setTimeout(playVideoIfReady, 500);
+
+      function startChromaKeyRendering() {
+        function renderFrame() {
+          if (
+            !videoPlaying ||
+            !activeVideo ||
+            activeVideo.paused ||
+            activeVideo.ended
+          ) {
+            if (activeVideo && activeVideo.ended) {
+              canvasLeft.style.display = "none";
+              canvasRight.style.display = "none";
+              activeVideo = null;
+            }
+            return;
+          }
+
+          const cropX = 10;
+          const cropY = 15;
+          const drawWidth = activeVideo.videoWidth - cropX * 2;
+          const drawHeight = activeVideo.videoHeight - cropY * 2;
+          const cw = canvasLeft.width;
+          const ch = canvasLeft.height;
+
+          if (drawWidth > 0 && drawHeight > 0) {
+            ctxLeft.clearRect(0, 0, cw, ch);
+            ctxLeft.drawImage(
+              activeVideo,
+              cropX,
+              cropY,
+              drawWidth,
+              drawHeight,
+              0,
+              0,
+              cw,
+              ch,
+            );
+          } else {
+            ctxLeft.drawImage(activeVideo, 0, 0, cw, ch);
+          }
+
+          const imageData = ctxLeft.getImageData(0, 0, cw, ch);
+          const data = imageData.data;
+
+          for (let i = 0; i < data.length; i += 4) {
+            const r = data[i],
+              g = data[i + 1],
+              b = data[i + 2];
+            const maxRB = Math.max(r, b);
+            if (g > maxRB + 20 && g > 70) {
+              const dominance = g - maxRB;
+              if (dominance > 45) {
+                data[i + 3] = 0;
+              } else {
+                data[i + 3] = Math.max(
+                  0,
+                  parseInt(255 - (dominance - 20) * 10),
+                );
+              }
+            }
+          }
+
+          // Push the perfectly removed green screen to BOTH eyes simultaneously!
+          ctxLeft.putImageData(imageData, 0, 0);
+
+          // Copy directly over to the right view for stereo effect
+          ctxRight.clearRect(0, 0, cw, ch);
+          ctxRight.drawImage(canvasLeft, 0, 0);
+
+          requestAnimationFrame(renderFrame);
+        }
+        requestAnimationFrame(renderFrame);
+      }
+
+      allVideos.forEach((v) => {
+        v.addEventListener("ended", function () {
+          if (activeVideo === this) {
+            canvasLeft.style.display = "none";
+            canvasRight.style.display = "none";
+            videoPlaying = false;
+            activeVideo = null;
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

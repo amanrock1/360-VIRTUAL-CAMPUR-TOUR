@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIT-BHOPAL Credits</title>
+    <link rel="stylesheet" href="styles3.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    <div class="container">
+        <h1 data-aos="fade-down">VIT-BHOPAL University Team</h1>
+         <h2>Special Thanks</h2>
+        <div class="special-thanks">
+            <div class="special-member">
+                <div class="member-image">
+                    <img src="image copy\Dr.-Gunjan ansari mam.jpg" alt="Program Chair Dr. Gunjan Ansari">
+                </div>
+                <div class="special-member-info">
+                    <h3>Dr. Gunjan Ansari</h3>
+                    <p>Program Chair, School of Computer Science and Engineering in Gaming Technology
+                        at VIT-Bhopal University. Leading innovation in computer science education and research.</p>
+                </div>
+            </div>
+
+            <div class="special-member">
+                <div class="member-image">
+                    <img src="image copy\DrSathish_C sir.jpg" alt="Supervisor Dr. Sathish C">
+                </div>
+                <div class="special-member-info">
+                    <h3>Dr. L Sathish Kumar</h3>
+                    <p>Supervisor and mentor, guiding students through their academic journey with expertise in computer science and technology innovation.</p>
+                </div>
+            </div>
+        </div>
+        
+        <h2 data-aos="fade-up">Team Members</h2>
+        <div class="team-members">
+            <div class="member" data-aos="fade-up" data-aos-delay="100">
+                <div class="member-image">
+                    <img src="image copy\shoubhik.jpeg" alt="Team Member 1">
+                </div>
+                <h3>Shoubhik Bhattacharya<br>(24BCG10095)</h3>
+                <p>Frontend Developer</p>
+                <div class="social-links">
+                </div>
+            </div>
+
+            <div class="member" data-aos="fade-up" data-aos-delay="200">
+                <div class="member-image">
+                    <img src="image copy\aman.jpeg" alt="Team Member 2">
+                </div>
+                <h3>Aman Kumar Prabhat <br>(24BCG10092)</h3>
+                <p>Virtual Tour Website Developer    
+                </p>
+                <div class="social-links">
+
+                </div>
+            </div>
+
+            <div class="member" data-aos="fade-up" data-aos-delay="300">
+                <div class="member-image">
+                    <img src="image copy\WhatsApp Image 2025-09-25 at 00.03.09_6d87837e.jpg" alt="Team Member 3">
+                </div>
+                <h3>Manan maheshwari<br>(24BCG10083)</h3>
+                <p>Designer (Ui/Ux)</p>
+                <div class="social-links">
+
+                </div>
+            </div>
+
+            <div class="member" data-aos="fade-up" data-aos-delay="400">
+                <div class="member-image">
+                    <img src="image copy\WhatsApp Image 2025-09-25 at 00.02.54_a8ef2a4c.jpg" alt="Team Member 4">
+                </div>
+                <h3>Nikhil Kumar Prabhat<br>(24BCG10119)</h3>
+                <p>Figma designer</p>
+                <div class="social-links">
+
+                </div>
+            </div>
+
+            <div class="member" data-aos="fade-up" data-aos-delay="500">
+                <div class="member-image">
+                    <img src="image copy\WhatsApp Image 2025-09-25 at 00.23.25_68fb8894.jpg" alt="Team Member 5">
+                </div>
+                <h3>Amaan tanveer <br>(24BCG10061)</h3>
+                <p>Figma designer</p>
+                <div class="social-links">
+                </div>
+            </div>
+        </div>
+        </div>
+    </div> <!-- End container -->
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+
+        // Spotlight Mouse Tracking Effect
+        document.body.onmousemove = e => {
+            for(const card of document.querySelectorAll('.member, .special-member')) {
+                const rect = card.getBoundingClientRect(),
+                      x = e.clientX - rect.left,
+                      y = e.clientY - rect.top;
+
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            }
+        }
+    </script>
+</body>
+</html>

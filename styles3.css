@@ -1,0 +1,201 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: #050505;
+    color: #e0e0e0;
+    line-height: 1.7;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Vibrant Animated Orbs Background */
+.animated-background {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    background: #050505;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.45;
+    animation: float 20s infinite alternate ease-in-out;
+}
+
+.orb-1 {
+    width: 400px; height: 400px;
+    background: #3a86ff;
+    top: -10%; left: -10%;
+}
+
+.orb-2 {
+    width: 500px; height: 500px;
+    background: #8338ec;
+    bottom: -20%; right: -10%;
+    animation-delay: -5s;
+    animation-duration: 25s;
+}
+
+.orb-3 {
+    width: 450px; height: 450px;
+    background: #ff006e;
+    top: 30%; left: 30%;
+    animation-delay: -10s;
+    animation-duration: 30s;
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(60px, -60px) scale(1.1); }
+    66% { transform: translate(-40px, 50px) scale(0.9); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 20px;
+}
+
+h1, h2 {
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    margin-bottom: 50px;
+    background: linear-gradient(135deg, #ffffff 40%, #ffb4e6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+h1 { font-size: 3.5rem; margin-bottom: 20px; }
+h2 { font-size: 2.2rem; margin-top: 80px; margin-bottom: 50px; }
+
+.special-thanks, .team-members {
+    display: grid;
+    gap: 30px;
+}
+
+.special-thanks {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+}
+
+.team-members {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* Glassmorphism Cards */
+.member, .special-member {
+    background: rgba(20, 20, 25, 0.5);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                border-color 0.4s ease, box-shadow 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.member::before, .special-member::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(
+        600px circle at var(--mouse-x, 0) var(--mouse-y, 0), 
+        rgba(255,255,255,0.08), 
+        transparent 40%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.member:hover, .special-member:hover {
+    transform: translateY(-8px);
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    background: rgba(30, 30, 35, 0.6);
+}
+
+.member:hover::before, .special-member:hover::before {
+    opacity: 1;
+}
+
+/* Ensure content stays above the spotlight glow */
+.member > *, .special-member > * {
+    z-index: 2;
+    position: relative;
+}
+
+.member-image {
+    width: 140px;
+    height: 140px;
+    margin-bottom: 25px;
+    border-radius: 50%;
+    padding: 4px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.05));
+    position: relative;
+}
+
+.member-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    filter: grayscale(10%) contrast(1.1);
+    transition: filter 0.4s ease, transform 0.5s ease;
+}
+
+.member:hover .member-image img, 
+.special-member:hover .member-image img {
+    filter: grayscale(0%) contrast(1.05);
+    transform: scale(1.08);
+}
+
+h3 {
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #ffffff;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.special-member-info p, .member p {
+    font-size: 0.95rem;
+    color: #aeb5c0;
+    font-weight: 300;
+}
+
+.social-links {
+    margin-top: 25px;
+    display: flex;
+    gap: 15px;
+}
+
+.social-links a {
+    color: #8c93a1;
+    font-size: 1.3rem;
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    color: #ffffff;
+    transform: translateY(-3px) scale(1.1);
+}

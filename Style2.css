@@ -1,0 +1,134 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  background-color: #86d3ff;
+  color: #222;
+  line-height: 1.6;
+}
+
+/* Basic Header Style */
+.header {
+  background-color: #111c3a;
+  color: #fff;
+}
+
+.header .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.8rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* MID VIDEO SECTION */
+.Mid {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.Mid video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.Mid-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #fff;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.Mid-content h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 2rem;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+}
+
+/* TOUR BUTTON WITH ANIMATION */
+.tour-button {
+  text-decoration: none;
+  background: #fd6262;
+  color: #fff;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border: 2px solid #000000;
+  display: inline-block;
+  transition: all 0.1s ease;
+
+  /* Add pulsing animation */
+  animation: pulse 2s infinite;
+}
+
+.tour-button:hover {
+  background: #ffec6e;
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(255, 87, 87, 0.8);
+}
+
+/* KEYFRAMES FOR PULSE */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.8);
+  }
+  100% {
+    transform: scale(1.2);
+  }
+}
+
+.shiksha-link {
+  display: inline-block;
+  padding: 8px 16px;
+  background: linear-gradient(45deg, #ff6600, #ff9900);
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: 0.3s ease;
+}
+
+.shiksha-link:hover {
+  background: linear-gradient(45deg, #ff9900, #ff6600);
+  transform: scale(1.05);
+  text-decoration: underline;
+}
+
+article
+{
+  text-align: center;
+  text-decoration: underline;
+  color: rgb(231, 22, 22);
+  background-color: #8a5ff552;
+  border-radius: 20px;
+
+}
