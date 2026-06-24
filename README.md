@@ -1,4 +1,4 @@
-# 360 Interactive Campus Tour 🌐
+# 360 Interactive Campus Tour 
 
 An immersive, web-based 360° virtual navigation and spatial exploration platform for the VIT Bhopal campus. This application features interactive stereoscopic VR capabilities and a real-time chroma-keyed virtual guide rendering engine, allowing prospective students, parents, and visitors to navigate and experience the campus environment remotely.
 
@@ -11,7 +11,7 @@ An immersive, web-based 360° virtual navigation and spatial exploration platfor
 
 ---
 
-## Overview 📝
+## Overview 
 
 Exploring large university campuses remotely poses a spatial understanding challenge. Standard static photo galleries and linear videos fail to convey architectural scale, connectivity, and environmental context. Visitors, incoming students, and parents often cannot visit the campus physically before enrollment or orientation.
 
@@ -19,7 +19,7 @@ This project addresses this issue by implementing a web-based, interactive 360°
 
 ---
 
-## Key Features 🚀
+## Key Features 
 
 | Feature | Technical Implementation | Description |
 | :--- | :--- | :--- |
@@ -32,7 +32,7 @@ This project addresses this issue by implementing a web-based, interactive 360°
 
 ---
 
-## Technology Stack 💻
+## Technology Stack 
 
 | Layer | Component / Library | Application & Usage |
 | :--- | :--- | :--- |
@@ -44,7 +44,7 @@ This project addresses this issue by implementing a web-based, interactive 360°
 
 ---
 
-## Architecture 🏗️
+## Architecture 
 
 The application structure consists of a presentation layer, a coordinate sync layer, and an asset storage pool. Visual guides are processed frame-by-frame and superimposed on top of the active panorama coordinates.
 
@@ -59,7 +59,7 @@ graph TD
 
 ---
 
-## Project Structure 📁
+## Project Structure 
 
 ```
 .
@@ -95,7 +95,7 @@ graph TD
 
 ---
 
-## Installation 🔧
+## Installation 
 
 Since the application is built on static client technologies, compiling code or running a server environment is not required. However, because modern browsers restrict file access (`file://`) due to CORS policies, the project must be served from a local server to load panoramas and guide videos correctly.
 
@@ -125,7 +125,7 @@ Since the application is built on static client technologies, compiling code or 
 
 ---
 
-## Usage 📖
+## Usage 
 
 1. **Enter the Campus Gateway:** On the landing page, read about the project scope, watch the media preview, and select "Enter Campus".
 2. **Rotate and Look Around:** Click and drag using your mouse, or swipe on mobile screens, to rotate the panorama 360 degrees. Use the `+` and `-` controls in the toolbar to adjust your field of view.
@@ -135,7 +135,7 @@ Since the application is built on static client technologies, compiling code or 
 
 ---
 
-## Screenshots 🖼️
+## Screenshots 
 
 *To add screenshots, replace the placeholders below with project image assets stored in your repository:*
 
@@ -161,7 +161,7 @@ Since the application is built on static client technologies, compiling code or 
 
 ---
 
-## How Navigation Works 🗺️
+## How Navigation Works 
 
 - **Scene Transitions:** Handled by Pannellum’s programmatic `viewer.loadScene(sceneId)` API. When triggered, the engine swaps the underlying texture coordinates and performs a fade-out to fade-in transition.
 - **Hotspot Mapping:** Declared statically in the tour config. Each hotspot holds spatial Euler angles (`pitch`, `yaw`) and a target `sceneId`.
@@ -170,7 +170,7 @@ Since the application is built on static client technologies, compiling code or 
 
 ---
 
-## Performance Optimizations ⚡
+## Performance Optimizations 
 
 - **On-Demand Loading:** Panoramic assets are not loaded simultaneously. The engine requests the equirectangular image file only when its corresponding scene is loaded.
 - **Dynamic Canvas Constraints:** Executing real-time pixel extraction on 1080p video frames causes high CPU usage. The pipeline scales the video frame onto a hidden canvas capped at a maximum width of 640 pixels prior to performing color extraction.
@@ -200,7 +200,7 @@ Since the application is built on static client technologies, compiling code or 
 
 ---
 
-## Future Improvements 🔮
+## Future Improvements 
 
 - **Voice Narratives:** Incorporating text-to-speech audio logs for each campus building.
 - **Conversational Agents:** Adding interactive chat helpers inside scenes to reply to student queries.
@@ -211,7 +211,7 @@ Since the application is built on static client technologies, compiling code or 
 
 ---
 
-## Learning Outcomes 🎓
+## Learning Outcomes 
 
 - **Spatial UX Design:** Mapping flat coordinate spaces into interactive spherical projections.
 - **Advanced DOM Control:** Syncing multiple WebGL panorama canvases simultaneously.
@@ -221,7 +221,7 @@ Since the application is built on static client technologies, compiling code or 
 
 ---
 
-## Contributing 🤝
+## Contributing 
 
 Contributions to expand the Virtual Tour database are welcome.
 
@@ -242,13 +242,13 @@ Contributions to expand the Virtual Tour database are welcome.
 
 ---
 
-## License 📄
+## License 
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
-## Author 👥
+## Author 
 
 Developed by Project Exhibition 01 - Group 1:
 - **Shoubhik Bhattacharya** - Frontend Developer
