@@ -3,15 +3,16 @@ document.addEventListener('DOMContentLoaded', () => {
     initLoader();
     initNavigation();
     initAnimations();
-    initCounters();
     initContactForm();
-    initTourCards();
+    initTourHandlers();
     initSmoothScrolling();
     initParallax();
-    initHoverEffects();
+    initShowcaseSlider();
+    initInteractiveMap();
+    initVideoModal();
     initKeyboardShortcuts();
     initLazyLoadSections();
-    console.log('🎓 VIT Bhopal Campus Tour initialized successfully!');
+    console.log('🎓 VIT Bhopal Virtual Gateway initialized successfully!');
 });
 
 /* -------------------- Loading Screen -------------------- */
@@ -37,25 +38,29 @@ function initNavigation() {
         navMenu.classList.toggle('active');
     };
 
-    navToggle.addEventListener('click', toggleMobileMenu);
+    if (navToggle) navToggle.addEventListener('click', toggleMobileMenu);
 
     // Highlight active link
     const sections = document.querySelectorAll('section');
     const updateActiveLink = () => {
         let current = '';
         sections.forEach(section => {
-            if (scrollY >= (section.offsetTop - 200)) current = section.id;
+            if (window.scrollY >= (section.offsetTop - 200)) current = section.id;
         });
-        navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${current}`));
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            link.classList.toggle('active', href === `#${current}` || (current === 'home' && href === '#home'));
+        });
     };
+    
     window.addEventListener('scroll', () => {
-        navbar.classList.toggle('scrolled', window.scrollY > 50);
+        if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 50);
         updateActiveLink();
     });
 
     navLinks.forEach(link => link.addEventListener('click', () => {
-        navToggle.classList.remove('active');
-        navMenu.classList.remove('active');
+        if (navToggle) navToggle.classList.remove('active');
+        if (navMenu) navMenu.classList.remove('active');
     }));
 }
 
@@ -63,41 +68,15 @@ function initNavigation() {
 function initAnimations() {
     const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add('visible');
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
         });
     }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-    document.querySelectorAll('.feature-card, .tour-card, .contact-item, .stat-card')
-        .forEach(el => { el.classList.add('fade-in'); observer.observe(el); });
-}
-
-/* -------------------- Counter Animation -------------------- */
-function initCounters() {
-    const counters = document.querySelectorAll('.stat-number');
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateCounter(entry.target);
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.5 });
-
-    counters.forEach(counter => observer.observe(counter));
-
-    function animateCounter(el) {
-        const target = +el.getAttribute('data-target');
-        const duration = 2000;
-        const step = target / (duration / 16);
-        let current = 0;
-        const timer = setInterval(() => {
-            current += step;
-            if (current >= target) {
-                el.textContent = target;
-                clearInterval(timer);
-            } else el.textContent = Math.floor(current);
-        }, 16);
-    }
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        observer.observe(el);
+    });
 }
 
 /* -------------------- Contact Form (Email.js) -------------------- */
@@ -105,7 +84,9 @@ function initContactForm() {
     const form = document.getElementById('contactForm');
     const submitBtn = document.getElementById('submitBtn');
 
-    emailjs.init("QC0tm7J1LheIuk7J3"); // Replace with your key
+    if (!form || !submitBtn) return;
+
+    emailjs.init("QC0tm7J1LheIuk7J3"); // Original Public Key
 
     form.addEventListener('submit', e => {
         e.preventDefault();
@@ -127,7 +108,7 @@ function initContactForm() {
                 showNotification('Message sent successfully!', 'success');
                 form.reset();
                 setTimeout(() => {
-                    submitBtn.innerHTML = '📤 Send Enquiry';
+                    submitBtn.innerHTML = 'Submit Inquiry <i class="fa-solid fa-paper-plane"></i>';
                     submitBtn.disabled = false;
                 }, 2000);
             })
@@ -135,32 +116,153 @@ function initContactForm() {
                 submitBtn.innerHTML = '❌ Failed';
                 showNotification('Error sending message. Try again.', 'error');
                 setTimeout(() => {
-                    submitBtn.innerHTML = '📤 Send Enquiry';
+                    submitBtn.innerHTML = 'Submit Inquiry <i class="fa-solid fa-paper-plane"></i>';
                     submitBtn.disabled = false;
                 }, 2000);
             });
     });
 }
 
-/* -------------------- Tour Cards -------------------- */
-function initTourCards() {
-    document.querySelectorAll('.tour-card').forEach(card => {
-        card.addEventListener('click', () => {
-            const loc = card.dataset.location;
-            showNotification(`Opening ${loc} virtual tour...`, 'info');
-            card.style.transform = 'scale(0.95)';
-            setTimeout(() => card.style.transform = '', 150);
-            setTimeout(() => showNotification(`${loc} tour loaded! Click and drag to explore.`, 'success'), 1500);
+/* -------------------- Tour Handlers -------------------- */
+function initTourHandlers() {
+    const startBtn = document.getElementById('startTourBtn');
+    const learnBtn = document.getElementById('learnMoreBtn');
+
+    if (startBtn) {
+        startBtn.addEventListener('click', () => {
+            showNotification('Starting virtual campus tour...', 'info');
+            setTimeout(() => {
+                window.location.href = 'tour-project/campus tour.html';
+            }, 800);
         });
+    }
+
+    if (learnBtn) {
+        learnBtn.addEventListener('click', () => {
+            const target = document.getElementById('about');
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
+        });
+    }
+}
+
+/* -------------------- Hero Showcase Slider -------------------- */
+function initShowcaseSlider() {
+    const items = document.querySelectorAll('.showcase-item');
+    if (items.length === 0) return;
+    
+    let currentIndex = 0;
+    let intervalId = null;
+
+    function showImage(index) {
+        items.forEach((item, i) => {
+            item.classList.toggle('active', i === index);
+        });
+        currentIndex = index;
+    }
+
+    function nextImage() {
+        let next = (currentIndex + 1) % items.length;
+        showImage(next);
+    }
+
+    function prevImage() {
+        let prev = (currentIndex - 1 + items.length) % items.length;
+        showImage(prev);
+    }
+
+    function startCycle() {
+        intervalId = setInterval(nextImage, 5000);
+    }
+
+    function stopCycle() {
+        if (intervalId) clearInterval(intervalId);
+    }
+
+    const nextBtn = document.querySelector('.showcase-arrow.next');
+    const prevBtn = document.querySelector('.showcase-arrow.prev');
+
+    if (nextBtn && prevBtn) {
+        nextBtn.addEventListener('click', () => {
+            stopCycle();
+            nextImage();
+            startCycle();
+        });
+        prevBtn.addEventListener('click', () => {
+            stopCycle();
+            prevImage();
+            startCycle();
+        });
+    }
+
+    startCycle();
+}
+
+/* -------------------- Interactive Campus Map -------------------- */
+function initInteractiveMap() {
+    const pins = document.querySelectorAll('.map-pin');
+    const title = document.getElementById('detailTitle');
+    const desc = document.getElementById('detailDesc');
+    const num = document.getElementById('detailNum');
+    const bg = document.querySelector('.blueprint-bg');
+
+    if (pins.length === 0) return;
+
+    function updateCard(pin) {
+        const pinNum = pin.getAttribute('data-num');
+        const pinTitle = pin.getAttribute('data-title');
+        const pinDesc = pin.getAttribute('data-desc');
+
+        pins.forEach(p => p.classList.remove('active'));
+        pin.classList.add('active');
+
+        if (num) num.textContent = pinNum;
+        if (title) title.textContent = pinTitle;
+        if (desc) desc.textContent = pinDesc;
+
+        if (bg) {
+            const top = parseFloat(pin.style.top);
+            const left = parseFloat(pin.style.left);
+            bg.style.transform = `scale(1.06) translate(${(50 - left) * 0.15}px, ${(50 - top) * 0.15}px)`;
+        }
+    }
+
+    pins.forEach(pin => {
+        pin.addEventListener('mouseenter', () => updateCard(pin));
+        pin.addEventListener('click', () => updateCard(pin));
     });
 
-    document.getElementById('startTourBtn').addEventListener('click', () => {
-        showNotification('Starting virtual campus tour...', 'info');
-        window.location.href = 'tour-project/campus tour.html';
+    // Initialize with first pin
+    if (pins[0]) updateCard(pins[0]);
+}
+
+/* -------------------- Preview Video Modal -------------------- */
+function initVideoModal() {
+    const modal = document.getElementById('videoModal');
+    const openBtn = document.getElementById('watchPreviewBtn');
+    const closeBtn = document.getElementById('modalCloseBtn');
+    const overlay = modal ? modal.querySelector('.modal-overlay') : null;
+    const video = document.getElementById('previewVideo');
+
+    if (!modal || !openBtn || !closeBtn || !video) return;
+
+    openBtn.addEventListener('click', () => {
+        modal.classList.add('active');
+        video.play().catch(e => console.log('Autoplay blocked:', e));
     });
 
-    document.getElementById('learnMoreBtn').addEventListener('click', () => {
-        document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+    const closeModal = () => {
+        modal.classList.remove('active');
+        video.pause();
+        video.currentTime = 0;
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    if (overlay) overlay.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
     });
 }
 
@@ -182,42 +284,27 @@ function showNotification(msg, type = 'info') {
     n.innerHTML = `<div class="notification-content"><span class="notification-icon">${getIcon(type)}</span><span>${msg}</span></div>`;
     Object.assign(n.style, {
         position: 'fixed', top: '100px', right: '20px',
-        background: 'var(--glass)', backdropFilter: 'blur(10px)',
-        border: '1px solid var(--glass-border)', borderRadius: '12px',
-        padding: '1rem 1.5rem', color: 'var(--text-primary)',
-        zIndex: 10000, transform: 'translateX(100%)', transition: 'transform 0.3s ease',
-        maxWidth: '400px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+        background: 'rgba(15, 15, 22, 0.8)', backdropFilter: 'blur(20px)',
+        border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '16px',
+        padding: '1rem 1.5rem', color: '#f5f5f7',
+        zIndex: 10000, transform: 'translateX(100%)', transition: 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)',
+        maxWidth: '400px', boxShadow: '0 20px 40px rgba(0,0,0,0.5)'
     });
-    switch(type){ case 'success': n.style.borderColor = '#10b981'; break; case 'error': n.style.borderColor = '#ef4444'; break; case 'warning': n.style.borderColor = '#f59e0b'; break; default: n.style.borderColor = '#6366f1'; }
+    switch(type){ case 'success': n.style.borderColor = '#10b981'; break; case 'error': n.style.borderColor = '#ef4444'; break; case 'warning': n.style.borderColor = '#f59e0b'; break; default: n.style.borderColor = '#0693e3'; }
     document.body.appendChild(n);
     setTimeout(() => n.style.transform = 'translateX(0)', 100);
-    setTimeout(() => { n.style.transform = 'translateX(100%)'; setTimeout(() => n.remove(), 300); }, 4000);
+    setTimeout(() => { n.style.transform = 'translateX(100%)'; setTimeout(() => n.remove(), 400); }, 4000);
 }
 function getIcon(type){ return { success:'✅', error:'❌', warning:'⚠️', info:'ℹ️' }[type] || 'ℹ️'; }
 
 /* -------------------- Parallax -------------------- */
 function initParallax() {
-    const parallaxEls = document.querySelectorAll('.hero-background');
+    const videoBg = document.querySelector('.hero-video-bg');
     window.addEventListener('scroll', () => {
         const scrollY = window.pageYOffset;
-        parallaxEls.forEach(el => el.style.transform = `translateY(${scrollY * 0.5}px)`);
-    });
-}
-
-/* -------------------- Interactive Hover -------------------- */
-function initHoverEffects() {
-    const cards = document.querySelectorAll('.feature-card, .stat-card');
-    document.addEventListener('mousemove', e => {
-        cards.forEach(card => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            if (x>=0 && x<=rect.width && y>=0 && y<=rect.height){
-                const rotateX = (y - rect.height/2)/10;
-                const rotateY = (rect.width/2 - x)/10;
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
-            } else card.style.transform = '';
-        });
+        if (videoBg) {
+            videoBg.style.transform = `scale(1.01) translateY(${scrollY * 0.3}px)`;
+        }
     });
 }
 
@@ -225,8 +312,10 @@ function initHoverEffects() {
 function initKeyboardShortcuts() {
     document.addEventListener('keydown', e => {
         if (e.key === 'Escape') {
-            document.getElementById('navMenu').classList.remove('active');
-            document.getElementById('navToggle').classList.remove('active');
+            const navMenu = document.getElementById('navMenu');
+            const navToggle = document.getElementById('navToggle');
+            if (navMenu) navMenu.classList.remove('active');
+            if (navToggle) navToggle.classList.remove('active');
         }
     });
 }

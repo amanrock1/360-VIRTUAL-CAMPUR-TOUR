@@ -3,26 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIT Bhopal - 360° Campus Virtual Tour</title>
-    <meta name="description" content="Explore VIT Bhopal's magnificent 250-acre campus through an immersive 360° virtual tour. Discover world-class facilities, modern architecture, and vibrant campus life.">
-    <meta name="author" content="VIT Bhopal">
+    <title>VIT Bhopal - 360° Campus Virtual Tour | Digital Campus Gateway</title>
+    <meta name="description" content="Step inside VIT Bhopal. Explore our magnificent 250-acre campus through an immersive 360° virtual tour. Experience classrooms, labs, hostels, and student life as if you are already here.">
+    <meta name="author" content="Group-1 Project Exhibition">
     
+    <!-- Open Graph Metadata for Social Sharing -->
     <meta property="og:title" content="VIT Bhopal - 360° Campus Virtual Tour">
     <meta property="og:description" content="Explore VIT Bhopal's magnificent 250-acre campus through an immersive 360° virtual tour. Discover world-class facilities, modern architecture, and vibrant campus life.">
     <meta property="og:type" content="website">
     
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-spinner"></div>
-        <div class="loading-text">Loading Campus Tour...</div>
+        <div class="loading-text">Preparing Virtual Gateway...</div>
     </div>
 
     <!-- Navigation -->
@@ -33,9 +36,9 @@
                 <span class="nav-title">VIT Bhopal</span>
             </div>
             <div class="nav-menu" id="navMenu">
-                <a href="index.html" class="nav-link active">Home</a>
+                <a href="#home" class="nav-link active">Home</a>
                 <a href="#about" class="nav-link">About</a>
-                <a href="tour-project\campus tour.html" class="nav-link">Virtual Tour</a>
+                <a href="tour-project/campus tour.html" class="nav-link">Virtual Tour</a>
                 <a href="#contact" class="nav-link">Contact</a>
             </div>
             <div class="nav-toggle" id="navToggle">
@@ -48,90 +51,258 @@
 
     <!-- Hero Section -->
     <section class="hero" id="home">
-        <div class="hero-background">
-            <div class="gradient-overlay"></div>
+        <!-- Cinematic Background Video -->
+        <div class="hero-video-container">
+            <video class="hero-video-bg" autoplay loop muted playsinline poster="tour-project/main mid.jpg">
+                <source src="tour-project/videos/Video Project 1 (1).mp4" type="video/mp4">
+            </video>
+            <div class="hero-overlay"></div>
         </div>
+        
         <div class="hero-content">
-            <div class="hero-text">
-                <h1 class="hero-title">
-                    <span class="title-line">Welcome to</span>
-                    <span class="title-line gradient-text">VIT Bhopal</span>
-                    <span class="title-line">360° Campus Tour</span>
+            <div class="hero-text-wrapper">
+                <h1 class="hero-headline">
+                    <span class="eyebrow">Virtual Exhibition</span>
+                    <span class="main-title">Step Inside <br><span class="highlight-serif">VIT Bhopal</span></span>
                 </h1>
-                <p class="hero-subtitle">Explore our magnificent 250-acre campus through an immersive virtual experience</p>
-                <div class="hero-buttons">
+                <p class="hero-subtext">Explore the campus as if you're already here.</p>
+                <div class="hero-ctas">
                     <button class="btn-primary" id="startTourBtn">
-                        <span class="btn-icon"></span>
-                        Start Virtual Tour
+                        <span class="btn-ripple"></span>
+                        Enter Campus
                     </button>
-                    <button class="btn-secondary" id="learnMoreBtn">
-                        <span class="btn-icon"></span>
-                        Access More
+                    <button class="btn-secondary" id="watchPreviewBtn">
+                        <i class="fa-solid fa-play"></i> Watch Preview
                     </button>
                 </div>
             </div>
-            <div class="hero-stats">
-                <div class="stat-card">
-                    <div class="stat-number" data-target="250">0</div>
-                    <div class="stat-label">Acres Campus</div>
+
+            <!-- Tour Showcase Screenshots (Replacing old stat cards) -->
+            <div class="hero-showcase">
+                <div class="showcase-track">
+                    <div class="showcase-item active" style="background-image: url('tour-project/lion park.jpg')">
+                        <span class="showcase-tag">Lion Park</span>
+                    </div>
+                    <div class="showcase-item" style="background-image: url('tour-project/ab2 main .jpeg')">
+                        <span class="showcase-tag">Academic Block 2</span>
+                    </div>
+                    <div class="showcase-item" style="background-image: url('tour-project/lc 5.jpg')">
+                        <span class="showcase-tag">Learning Center</span>
+                    </div>
+                    <div class="showcase-item" style="background-image: url('tour-project/all path.jpg')">
+                        <span class="showcase-tag">Campus Walkway</span>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number" data-target="2017">0</div>
-                    <div class="stat-label">Established</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" data-target="33">0</div>
-                    <div class="stat-label">Courses</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" data-target="70">0</div>
-                    <div class="stat-label">LPA Package</div>
+                <div class="showcase-nav">
+                    <button class="showcase-arrow prev" aria-label="Previous Showcase Image"><i class="fa-solid fa-arrow-left"></i></button>
+                    <button class="showcase-arrow next" aria-label="Next Showcase Image"><i class="fa-solid fa-arrow-right"></i></button>
                 </div>
             </div>
         </div>
-        <div class="scroll-indicator">
-            <div class="scroll-arrow"></div>
+        <div class="scroll-prompt" id="learnMoreBtn">
+            <span class="scroll-line"></span>
+            <span class="scroll-text">Scroll to explore</span>
         </div>
     </section>
 
-    <!-- About Section -->
-    <section class="about" id="about">
+    <!-- Why This Tour Exists Section -->
+    <section class="storytelling-section" id="about">
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">About <span class="gradient-text">VIT Bhopal<span class="skillsdot">.</span></span></h2>
-                <p class="section-subtitle">Pioneering Excellence in Education Since 2017</p>
-            </div>
-            <div class="about-content">
-                <div class="about-text">
-                    <p class="about-paragraph">
-                        Established in 2017, VIT Bhopal is spread over a huge campus of 250 acres located at Indore Highway, Bhopal. 
-                        The campus has a unique integrated 'Lecture and Laboratory' learning platform which is the blackboard-less classroom.
-                    </p>
-                    <p class="about-paragraph">
-                        The university uses <strong>Collaborative and Active Learning Through Technology (CALTECH)</strong> and a 
-                        <strong>Fully Flexible Credit System (FFCS)</strong> to facilitate the learning of students.
-                    </p>
+            <div class="story-grid">
+                <div class="story-header animate-on-scroll">
+                    <span class="section-tag">Concept</span>
+                    <h2 class="editorial-title">Not Just a Website.</h2>
                 </div>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">🎓</div>
-                        <h3 class="feature-title">World-Class Education</h3>
-                        <p class="feature-description">Cutting-edge curriculum with industry integration</p>
+                <div class="story-body animate-on-scroll">
+                    <p class="lead-text">This virtual experience was designed to help prospective students, parents, and visitors explore the campus remotely and understand the environment before arriving physically.</p>
+                    <p class="supporting-text">Every building, pathway, and lecture hall has been mapped in high-definition panoramic imagery. We invite you to experience the spatial context and state-of-the-art infrastructure of India's premier technology university.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Immersive Preview Section -->
+    <section class="immersive-preview-section">
+        <div class="container">
+            <div class="section-tag-wrapper">
+                <span class="section-tag">Interactive Features</span>
+                <h2 class="section-title">Designed for Discovery</h2>
+            </div>
+            
+            <div class="horizontal-cards-grid">
+                <!-- Card 1 -->
+                <div class="horizontal-card animate-on-scroll">
+                    <div class="card-image-box" style="background-image: url('tour-project/lion park.jpg')">
+                        <div class="card-image-overlay"></div>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">💡</div>
-                        <h3 class="feature-title">Innovation Hub</h3>
-                        <p class="feature-description">State-of-the-art labs and research facilities</p>
+                    <div class="card-content-box">
+                        <span class="card-num">01</span>
+                        <h3 class="card-heading">Explore in 360°</h3>
+                        <p class="card-desc">Move freely and experience every location in immersive 360° panoramas.</p>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🌐</div>
-                        <h3 class="feature-title">Global Connections</h3>
-                        <p class="feature-description">International partnerships and opportunities</p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="horizontal-card animate-on-scroll">
+                    <div class="card-image-box" style="background-image: url('tour-project/Dr.-Gunjan-Ansari.jpg')">
+                        <div class="card-image-overlay"></div>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🚀</div>
-                        <h3 class="feature-title">Career Excellence</h3>
-                        <p class="feature-description">100% placement assistance with top companies</p>
+                    <div class="card-content-box">
+                        <span class="card-num">02</span>
+                        <h3 class="card-heading">Guided by AI Avatar</h3>
+                        <p class="card-desc">Receive location-based interactive explanations while exploring the campus.</p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="horizontal-card animate-on-scroll">
+                    <div class="card-image-box" style="background-image: url('tour-project/all path.jpg')">
+                        <div class="card-image-overlay"></div>
+                    </div>
+                    <div class="card-content-box">
+                        <span class="card-num">03</span>
+                        <h3 class="card-heading">Smart Navigation</h3>
+                        <p class="card-desc">Teleport between buildings and discover campus landmarks seamlessly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Campus Journey Timeline Section -->
+    <section class="journey-timeline-section">
+        <div class="container">
+            <div class="section-tag-wrapper align-center">
+                <span class="section-tag">Guided Itinerary</span>
+                <h2 class="section-title">The Campus Itinerary</h2>
+                <p class="section-intro">Trace the path of a typical visitor, starting from the campus gates to the ultimate administrative and gathering facilities.</p>
+            </div>
+
+            <div class="timeline-container">
+                <!-- Timeline Line -->
+                <div class="timeline-progress-line"></div>
+
+                <!-- Step 1 -->
+                <div class="timeline-step animate-on-scroll">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-image" style="background-image: url('tour-project/MAIN ENTER.jpeg')"></div>
+                    <div class="timeline-content">
+                        <span class="step-meta">Stop 01</span>
+                        <h3>Main Entrance</h3>
+                        <p>Pass through the grand archway of the main gate, initiating your digital journey into the campus.</p>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="timeline-step animate-on-scroll">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-image" style="background-image: url('tour-project/VITB.jpeg')"></div>
+                    <div class="timeline-content">
+                        <span class="step-meta">Stop 02</span>
+                        <h3>Academic Block</h3>
+                        <p>Walk into Academic Block 1, featuring high-tech CALTECH classrooms designed for active collaborative learning.</p>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="timeline-step animate-on-scroll">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-image" style="background-image: url('tour-project/ARCH PIC.jpeg')"></div>
+                    <div class="timeline-content">
+                        <span class="step-meta">Stop 03</span>
+                        <h3>Central Library</h3>
+                        <p>Visit the architectural marvel of the Learning Resource Center, housing thousands of educational resources.</p>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="timeline-step animate-on-scroll">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-image" style="background-image: url('tour-project/FOOD.jpeg')"></div>
+                    <div class="timeline-content">
+                        <span class="step-meta">Stop 04</span>
+                        <h3>Food Court</h3>
+                        <p>Stop by the lively food court, the social hub for students offering diverse culinary choices.</p>
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="timeline-step animate-on-scroll">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-image" style="background-image: url('tour-project/hostel start 1.jpg')"></div>
+                    <div class="timeline-content">
+                        <span class="step-meta">Stop 05</span>
+                        <h3>Modern Hostels</h3>
+                        <p>Experience the secure, modern residential blocks that provide a comfortable home away from home.</p>
+                    </div>
+                </div>
+
+                <!-- Step 6 -->
+                <div class="timeline-step animate-on-scroll">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-image" style="background-image: url('tour-project/mph.jpg')"></div>
+                    <div class="timeline-content">
+                        <span class="step-meta">Stop 06</span>
+                        <h3>Auditorium (MPH)</h3>
+                        <p>Conclude at the Multi-Purpose Hall (MPH), hosting major institutional activities, sports, and cultural events.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Campus Map Preview -->
+    <section class="interactive-map-section">
+        <div class="container">
+            <div class="map-grid">
+                <div class="map-info-box animate-on-scroll">
+                    <span class="section-tag">Visual Layout</span>
+                    <h2 class="section-title">Interactive Map Blueprint</h2>
+                    <p class="map-intro">Get your bearings. Hover over the active nodes on the blueprint to preview the key zones across the campus layout.</p>
+                    
+                    <!-- Dynamic Detail Card -->
+                    <div class="map-detail-card" id="mapDetailCard">
+                        <div class="detail-card-header">
+                            <span class="detail-number" id="detailNum">01</span>
+                            <h3 class="detail-title" id="detailTitle">Main Entrance</h3>
+                        </div>
+                        <p class="detail-description" id="detailDesc">Select a node on the map layout to display its information.</p>
+                        <a href="tour-project/campus tour.html" class="btn-detail-explore">Explore in Tour <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <div class="map-visual-box animate-on-scroll">
+                    <div class="blueprint-container">
+                        <!-- Blueprint Map Image/SVG Background -->
+                        <div class="blueprint-bg" style="background-image: url('tour-project/main mid.jpg')">
+                            <div class="blueprint-overlay"></div>
+                        </div>
+                        
+                        <!-- Map Pins -->
+                        <div class="map-pin active" style="top: 85%; left: 20%;" data-num="01" data-title="Main Entrance" data-desc="The grand entryway arch of the campus that welcomes students and visitors alike.">
+                            <div class="pin-pulse"></div>
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        
+                        <div class="map-pin" style="top: 50%; left: 45%;" data-num="02" data-title="Academic Block 1" data-desc="The heart of education at VIT Bhopal, featuring modular classroom platforms.">
+                            <div class="pin-pulse"></div>
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        
+                        <div class="map-pin" style="top: 35%; left: 60%;" data-num="03" data-title="Academic Block 2" data-desc="State-of-the-art tech classrooms and advanced computer laboratory wings.">
+                            <div class="pin-pulse"></div>
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        
+                        <div class="map-pin" style="top: 45%; left: 75%;" data-num="04" data-title="Central Library" data-desc="The modern Learning Resource Center with a circular glass-walled architectural layout.">
+                            <div class="pin-pulse"></div>
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+
+                        <div class="map-pin" style="top: 25%; left: 40%;" data-num="05" data-title="Multi-Purpose Hall" data-desc="An expansive dome building dedicated to indoor athletics, major assemblies, and examinations.">
+                            <div class="pin-pulse"></div>
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -139,54 +310,75 @@
     </section>
 
     <!-- Contact Section -->
-    <section class="contact" id="contact">
+    <section class="contact-redesign-section" id="contact">
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Get In <span class="gradient-text">Touch<span class="skillsdot">.</span></span></h2>
-                <p class="section-subtitle">We'd love to hear from you</p>
+            <div class="section-tag-wrapper align-center">
+                <span class="section-tag">Admissions & Inquiries</span>
+                <h2 class="section-title">Connect with Campus</h2>
+                <p class="section-intro">Have questions about admissions, facilities, or visiting VIT Bhopal? Reach out to our representative offices below.</p>
             </div>
-            <div class="contact-content">
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <div class="contact-icon">📍</div>
-                        <div class="contact-details">
-                            <h3>Address</h3>
-                            <a href="https://www.google.com/maps/place/VIT+Bhopal+University/@23.0752256,76.8606208,14z/data=!4m6!3m5!1s0x397ce9ceaaaaaaab:0xa224b6b82b421f83!8m2!3d23.0774796!4d76.8513183!16s%2Fg%2F11hbgkdndx?entry=ttu&g_ep=EgoyMDI1MDkyMS4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="contact-link"><p>VIT Bhopal University<br>Bhopal-Indore Highway, Kothrikalan<br>Sehore, Madhya Pradesh – 466114</p></a>
+
+            <div class="contact-layout-grid">
+                <!-- Info Cards -->
+                <div class="admissions-info-cards animate-on-scroll">
+                    <div class="info-card">
+                        <div class="info-card-icon"><i class="fa-solid fa-user-graduate"></i></div>
+                        <div class="info-card-text">
+                            <h3>Admissions Helpline</h3>
+                            <p>Call: <a href="tel:+91-755-715-8000">+91-755-715-8000</a></p>
+                            <p>Email: <a href="mailto:admissions@vitbhopal.ac.in">admissions@vitbhopal.ac.in</a></p>
                         </div>
                     </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">📞</div>
-                        <div class="contact-details">
-                            <h3>Phone</h3>
-                            <p><a href="tel:+91-755-715-8000" class="contact-link">+91-755-715-8000</a></p>
+
+                    <div class="info-card">
+                        <div class="info-card-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                        <div class="info-card-text">
+                            <h3>Campus Address</h3>
+                            <a href="https://www.google.com/maps/place/VIT+Bhopal+University/@23.0752256,76.8606208,14z/data=!4m6!3m5!1s0x397ce9ceaaaaaaab:0xa224b6b82b421f83!8m2!3d23.0774796!4d76.8513183!16s%2Fg%2F11hbgkdndx?entry=ttu&g_ep=EgoyMDI1MDkyMS4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="address-map-link">
+                                <p>VIT Bhopal University<br>Bhopal-Indore Highway, Kothrikalan<br>Sehore, Madhya Pradesh – 466114</p>
+                            </a>
                         </div>
                     </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">✉️</div>
-                        <div class="contact-details">
-                            <h3>Email</h3>
-                            <p><a href="mailto:info@vitbhopal.ac.in">info@vitbhopal.ac.in</a></p>
+
+                    <div class="info-card">
+                        <div class="info-card-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
+                        <div class="info-card-text">
+                            <h3>General Inquiries</h3>
+                            <p>Email: <a href="mailto:info@vitbhopal.ac.in">info@vitbhopal.ac.in</a></p>
                         </div>
                     </div>
                 </div>
-                <form class="contact-form" id="contactForm">
-                    <div class="form-group">
-                        <input type="text" id="name" name="name" placeholder="Your Name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" id="email" name="email" placeholder="Your Email" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="tel" id="phone" name="phone" placeholder="Your Phone">
-                    </div>
-                    <div class="form-group">
-                        <textarea id="message" name="message" placeholder="Your Message" rows="5" required></textarea>
-                    </div>
-                    <button type="submit" class="btn-primary" id="submitBtn">
-                        <span class="btn-icon">📤</span>
-                        Send Enquiry
-                    </button>
-                </form>
+
+                <!-- Minimalism Contact Form -->
+                <div class="contact-form-box animate-on-scroll">
+                    <form class="premium-contact-form" id="contactForm">
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="name">Full Name</label>
+                                <input type="text" id="name" name="name" placeholder="Your Name" required>
+                            </div>
+                        </div>
+                        <div class="form-row split">
+                            <div class="form-field">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" placeholder="email@address.com" required>
+                            </div>
+                            <div class="form-field">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" placeholder="+91 00000 00000">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="message">Your Inquiry</label>
+                                <textarea id="message" name="message" placeholder="How can we assist you?" rows="4" required></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-form-submit" id="submitBtn">
+                            Submit Inquiry <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </section>
@@ -223,7 +415,7 @@
                 <div class="footer-section">
                     <h3>Socials</h3>
                     <div class="footer-social">
-                        <a href="https://x.com/vitbhopal?lang=en" target="_blank"><i class="fab fa-x"></i></a>
+                        <a href="https://x.com/vitbhopal?lang=en" target="_blank"><i class="fab fa-x-twitter"></i></a>
                         <a href="https://www.instagram.com/vit.bhopal/" target="_blank"><i class="fab fa-instagram"></i></a>
                         <a href="https://www.linkedin.com/school/vit-bhopal-university/posts/?feedView=all" target="_blank"><i class="fab fa-linkedin-in"></i></a>
                         <a href="https://www.facebook.com/VITUnivBhopal/" target="_blank"><i class="fab fa-facebook"></i></a>
@@ -233,11 +425,27 @@
             </div>
             <div class="footer-bottom">
                 <hr>
-                <a href="Credits.html" target="_blank" style="color: aliceblue;text-decoration: none;">Credits Of our Team Members</a>
+                <a href="Credits.html" target="_blank" style="color: rgba(255,255,255,0.7); text-decoration: none; margin-bottom: 0.5rem; display: inline-block;">Credits Of our Team Members</a>
                 <p>&copy; 2025 Group-1. All rights reserved.</p>
             </div>
         </div>
     </footer>
+
+    <!-- Video Modal for Preview -->
+    <div class="video-modal" id="videoModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modalCloseBtn"><i class="fa-solid fa-xmark"></i></button>
+            <div class="video-wrapper">
+                <video id="previewVideo" controls>
+                    <source src="tour-project/videos/Video Project 1 (1).mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Dependencies -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="main.js"></script>
 </body>
