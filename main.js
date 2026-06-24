@@ -299,11 +299,11 @@ function getIcon(type){ return { success:'✅', error:'❌', warning:'⚠️', i
 
 /* -------------------- Parallax -------------------- */
 function initParallax() {
-    const videoBg = document.querySelector('.hero-video-bg');
+    const bgImage = document.querySelector('.hero-bg-image');
     window.addEventListener('scroll', () => {
         const scrollY = window.pageYOffset;
-        if (videoBg) {
-            videoBg.style.transform = `scale(1.01) translateY(${scrollY * 0.3}px)`;
+        if (bgImage) {
+            bgImage.style.transform = `scale(1.02) translateY(${scrollY * 0.35}px)`;
         }
     });
 }
