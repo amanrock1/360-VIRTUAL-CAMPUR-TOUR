@@ -2,6 +2,8 @@
 
 An immersive, web-based 360° virtual navigation and spatial exploration platform for the VIT Bhopal campus. This application features interactive stereoscopic VR capabilities and a real-time chroma-keyed virtual guide rendering engine, allowing prospective students, parents, and visitors to navigate and experience the campus environment remotely.
 
+**Live Tour Portal:** [360-virtual-campur-tour.vercel.app](https://360-virtual-campur-tour.vercel.app/)
+
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/amanrock1/360-VIRTUAL-CAMPUR-TOUR.svg)](https://github.com/amanrock1/360-VIRTUAL-CAMPUR-TOUR/stargazers)
 [![Pannellum](https://img.shields.io/badge/library-Pannellum_v2.5.6-orange.svg)](https://pannellum.org/)
@@ -251,6 +253,3 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 Developed by Project Exhibition 01 - Group 1:
 - **Shoubhik Bhattacharya** - Frontend Developer
 - **Aman Kumar Prabhat** - 360° Website Developer
-- **Manan Maheshwari** - UI/UX Designer
-- **Nikhil Kumar Prabhat** - Scene & Information Manager
-- **Amaan Tanveer** - Figma Designer
