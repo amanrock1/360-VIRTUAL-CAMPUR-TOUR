@@ -144,7 +144,7 @@ Since the application is built on static client technologies, compiling code or 
 *Figure 1: The gateway landing page showcasing introductory cards, team credits, and entry triggers.*
 
 #### 360° Panoramic View
-![Panorama View Placeholder](image%20copy/panorama_preview.png)
+![Panorama View Placeholder](image%20copy/panorama_preview.jpg)
 *Figure 2: The interactive campus viewer rendering equirectangular environment maps.*
 
 #### Hotspot Navigation and Interactive Controls
@@ -156,7 +156,7 @@ Since the application is built on static client technologies, compiling code or 
 *Figure 4: Dual-viewport output optimized for cardboard VR headsets.*
 
 #### Mobile Layout View
-![Mobile View Placeholder](image%20copy/mobile_preview.png)
+![Mobile View Placeholder](image%20copy/mobile_preview.jpeg)
 *Figure 5: Optimized layout and collapsed menus running on mobile screens.*
 
 ---
