@@ -80,6 +80,7 @@ graph TD
 │   ├── style1.css              # Tour UI styles (top bar, sidebar, toolbar, hotspots)
 │   ├── script.js               # Tour UI controls + neighbour-scene preloading
 │   ├── scene-names.js          # Readable names for every scene and hotspot (edit names here)
+│   ├── place-info.js           # Text and positions of the round "i" information pop-ups (tour only)
 │   ├── *.jpg                   # 3584x1792 equirectangular panoramas (one per scene)
 │   ├── thumbs/                 # Flat 720x460 views for sidebar and itinerary
 │   ├── showcase/               # Flat 1600x1000 views for the landing page
@@ -105,6 +106,7 @@ Read in this order: this README, then [`CLAUDE.md`](CLAUDE.md) (how the code is 
 | :--- | :--- |
 | Change the text or sections of the landing page | `index.html` (styles in `style.css`, behaviour in `main.js`) |
 | Rename a place or fix a hotspot label | `tour-project/scene-names.js` |
+| Change the text of an information pop-up, or add one | `tour-project/place-info.js` |
 | Change the tour buttons, sidebar, or colours | `tour-project/campus tour.html` (markup), `tour-project/style1.css` (look), `tour-project/script.js` (behaviour) |
 | Add or change a scene, or a link between scenes | `tour-project/scenes-data.js` (used by both the tour and VR mode) |
 | Change the guide (green-screen) videos | `tour-project/videos/` and the chroma-key section at the bottom of `campus tour.html` |
@@ -159,7 +161,8 @@ Since the application is built on static client technologies, compiling code or 
 2. **Rotate and Look Around:** Click and drag using your mouse, or swipe on mobile screens, to rotate the panorama 360 degrees. Use the `+` and `-` controls in the toolbar to adjust your field of view.
 3. **Move to Adjacent Locations:** Identify hotspot overlays within the scene. Hovering over a hotspot displays the destination name. Clicking the hotspot triggers a fade transition to that location.
 4. **Utilize Quick Navigation:** Click the "Locations" button on the top left to open the sidebar. Click any location (e.g., Lab Complex, Girls Hostel, Food Court) to jump directly to that scene.
-5. **Activate VR Mode:** Click the VR headset icon in the bottom toolbar. Insert your mobile device into a VR viewer (e.g., Google Cardboard) to explore the campus. Enter VR, turn your head to look around, and look at a round arrow for about 1.5 seconds to walk to that place.
+5. **Read about a place:** amber circles with an "i" appear on buildings (entrance gate, Lab Complex, Academic Blocks, Architecture Block, MPH, hostel, food court). Click or tap one to open a short information card with a link to the matching page on vitbhopal.ac.in.
+6. **Activate VR Mode:** Click the VR headset icon in the bottom toolbar. Insert your mobile device into a VR viewer (e.g., Google Cardboard) to explore the campus. Enter VR, turn your head to look around, and look at a round arrow for about 1.5 seconds to walk to that place.
 
 ---
 

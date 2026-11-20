@@ -136,11 +136,24 @@
       <p class="noscript">This virtual tour needs JavaScript to run.</p>
     </noscript>
 
+    <!-- Place information card (opened by the round "i" circles; see place-info.js) -->
+    <aside class="info-card" id="infoCard" role="dialog" aria-labelledby="infoTitle" hidden>
+      <button class="info-close" id="infoClose" type="button" aria-label="Close information">
+        <svg class="icon"><use href="#i-close" /></svg>
+      </button>
+      <p class="info-kicker">About this place</p>
+      <h2 id="infoTitle"></h2>
+      <p class="info-text" id="infoText"></p>
+      <div class="info-links" id="infoLinks"></div>
+      <p class="info-source">Source: vitbhopal.ac.in</p>
+    </aside>
+
     <div id="panorama"></div>
 
     <div id="hint" class="hint" role="status">Drag to look around · click the arrows to move</div>
 
     <script src="scene-names.js"></script>
+    <script src="place-info.js"></script>
 
     <!-- Video Element for Chroma Key -->
     <video
@@ -212,8 +225,17 @@
       if (requestedScene && tourConfig.scenes[requestedScene]) {
         tourConfig.default.firstScene = requestedScene;
       }
+      // Optional view direction in the link: ?scene=<id>&yaw=<degrees>&pitch=<degrees>
+      const linkParams = new URLSearchParams(location.search);
+      if (requestedScene && tourConfig.scenes[requestedScene]) {
+        const linkYaw = parseFloat(linkParams.get("yaw"));
+        const linkPitch = parseFloat(linkParams.get("pitch"));
+        if (!isNaN(linkYaw)) tourConfig.scenes[requestedScene].yaw = linkYaw;
+        if (!isNaN(linkPitch)) tourConfig.scenes[requestedScene].pitch = linkPitch;
+      }
 
       applySceneNames(tourConfig);
+      applyPlaceInfo(tourConfig); // round "i" circles that open an information card
 
       var viewer = pannellum.viewer("panorama", tourConfig);
 

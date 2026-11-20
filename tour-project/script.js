@@ -133,6 +133,9 @@ function updateVrLink() {
   if (vrLink) vrLink.href = "../vr_tour/index.html?scene=" + encodeURIComponent(viewer.getScene());
 }
 viewer.on("load", updateVrLink);
+viewer.on("scenechange", function () {
+  if (typeof closePlaceInfo === "function") closePlaceInfo();
+});
 viewer.on("scenechange", updateVrLink);
 
 window.viewer = viewer;
