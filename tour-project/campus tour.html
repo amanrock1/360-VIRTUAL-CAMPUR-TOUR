@@ -11,7 +11,7 @@
       name="description"
       content="Explore the VIT Bhopal University campus in an interactive 360° virtual tour."
     />
-    <meta name="theme-color" content="#0b2a5b" />
+    <meta name="theme-color" content="#2c3370" />
     <link rel="icon" href="../logo/Vit Bhopal Logo.png" type="image/png" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link
@@ -1853,6 +1853,12 @@
             }
           }
         }
+      }
+
+      // Deep link: "campus tour.html?scene=<scene id>" opens the tour at that location
+      const requestedScene = new URLSearchParams(location.search).get("scene");
+      if (requestedScene && tourConfig.scenes[requestedScene]) {
+        tourConfig.default.firstScene = requestedScene;
       }
 
       applySceneNames(tourConfig);

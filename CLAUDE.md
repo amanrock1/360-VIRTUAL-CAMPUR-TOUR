@@ -17,7 +17,7 @@ For headless screenshots from `file://`, Chrome needs `--allow-file-access-from-
 There are no tests or linters. Verify by: `node --check <file>.js`, confirming referenced files exist, and looking at the page in a browser (desktop and ~390 px wide).
 
 ## Layout
-- `index.html`, `style.css`, `main.js` - landing page. `Credits.html` + `styles3.css` - credits.
+- `index.html`, `style.css`, `main.js` - landing page (light theme matching vitbhopal.ac.in; no frameworks, no Font Awesome). `Credits.html` + `styles3.css` - credits.
 - `tour-project/campus tour.html` - the tour: one inline script holds the Pannellum config for 70 scenes, then the chroma-key guide-video logic.
 - `tour-project/script.js` - UI controls (sidebar, zoom, fullscreen, hold-to-look arrows) and neighbour-scene preloading. Loaded after the inline script; relies on globals `viewer` and `tourConfig`.
 - `tour-project/scene-names.js` - **the only place scene/hotspot display names live.** `applySceneNames(tourConfig)` runs before the viewer is created.
@@ -26,12 +26,14 @@ There are no tests or linters. Verify by: `node --check <file>.js`, confirming r
 
 ## Conventions and gotchas
 - **Scene ids are file names** and contain odd spacing, e.g. `"ab2  3"` (two spaces), `"ab 2 gate 9"`. Never "tidy" them; `pfile(name)` appends `.jpg`.
-- **The logo (`logo/Vit Bhopal Logo.png`) is white on transparent.** Always place it on a dark background; on white it is invisible.
-- **Brand colours:** navy `#0b2a5b` / `#071c3f` (tour), `#050d1f` (landing background), gold `#f2a900`. Fonts: system stack in the tour; Outfit + Playfair Display on the landing page.
+- **Two logos:** `logo/vit-bhopal-logo.png` is navy (for light backgrounds, copied from vitbhopal.ac.in/logos); `logo/Vit Bhopal Logo.png` is WHITE on transparent (dark backgrounds only; invisible on white). When resizing PNGs with ffmpeg keep alpha (`-pix_fmt rgba`).
+- **Brand colours (taken from the official site's CSS):** primary `#2c3370`, dark `#202653`, deep `#151a3e`, light `#e9eaf4`, muted background `#f6f7fb`, amber accent `#f2ad4a`. Fonts: Manrope (text) and Newsreader (headings) on the landing page; system stack in the tour. Keep the landing page plain and institutional: no glow, gradient text, carousels, numbered feature cards or marketing slogans.
 - **Touch devices:** do not put `backdrop-filter` over the live panorama, do not animate `box-shadow`, and keep hover effects inside pointer-capable contexts. These caused flicker on phones (see the "Touch devices" block at the end of `tour-project/style1.css`).
 - Pannellum's own drag/touch/keyboard handling is used; do not re-add custom drag handlers.
 - Do not touch the green-screen guide videos (`tour-project/videos/`) without checking the chroma key in `campus tour.html` (`g > max(r,b) + 20`), since re-encoding can break the keying.
 - `Drone_Background/` and `Chancellor.png` are currently unused by any page.
+- **Deep links:** `tour-project/campus tour.html?scene=<scene id>` opens the tour at that scene (URL-encode spaces, e.g. `ab2%20%203`). The landing-page location cards rely on this.
+- The landing page has no contact form any more (it used a student's EmailJS account); contact details link to the official site.
 
 ## Media pipeline (ffmpeg is available)
 Panoramas must be regenerated from the **original** files in git history (commit `4004e46`), never by recompressing the current ones:

@@ -8,7 +8,7 @@
 
 body {
     font-family: 'Outfit', sans-serif;
-    background-color: #050d1f;
+    background-color: #151a3e;
     color: #e0e0e0;
     line-height: 1.7;
     overflow-x: hidden;
@@ -22,7 +22,7 @@ body {
     width: 100vw; height: 100vh;
     z-index: -1;
     overflow: hidden;
-    background: #050d1f;
+    background: #151a3e;
 }
 
 .orb {
@@ -35,13 +35,13 @@ body {
 
 .orb-1 {
     width: 400px; height: 400px;
-    background: #1a4fa3;
+    background: #3a4590;
     top: -10%; left: -10%;
 }
 
 .orb-2 {
     width: 500px; height: 500px;
-    background: #0b2a5b;
+    background: #2c3370;
     bottom: -20%; right: -10%;
     animation-delay: -5s;
     animation-duration: 25s;
@@ -49,7 +49,7 @@ body {
 
 .orb-3 {
     width: 450px; height: 450px;
-    background: #f2a900;
+    background: #f2ad4a;
     top: 30%; left: 30%;
     animation-delay: -10s;
     animation-duration: 30s;

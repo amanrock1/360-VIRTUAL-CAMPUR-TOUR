@@ -40,7 +40,7 @@ This project addresses this issue by implementing a web-based, interactive 360°
 | **Panorama Rendering Engine** | Pannellum (v2.5.6) | Projective mapping of equirectangular coordinates to sphere meshes inside the browser. |
 | **Pixel Processing Pipeline** | HTML5 Canvas 2D API | Context operations executing real-time chroma subtraction on video frame buffers. |
 | **Visual Resources** | Equirectangular Panoramic Photography, MP4 Video Guides | Media library containing 360° captures and green-screen guide recordings. |
-| **Typography & Icons** | Outfit, Playfair Display (Google Fonts), FontAwesome 6 | Clean UI layouts and clear navigation controls. |
+| **Typography & Icons** | Manrope and Newsreader (Google Fonts), inline SVG icons | Clean UI layouts and clear navigation controls. |
 
 ---
 
@@ -63,12 +63,13 @@ graph TD
 
 ```
 .
-├── index.html                  # Landing page (hero, itinerary, map preview, contact, footer)
+├── index.html                  # Landing page (hero, about, location cards, how-to, contact, footer)
 ├── style.css                   # Landing page styles (navy + gold theme)
-├── main.js                     # Landing page interactions (nav, showcase, modal, EmailJS form)
+├── main.js                     # Landing page behaviour (mobile menu, campus video dialog)
 ├── Credits.html                # Team credits page
 ├── styles3.css                 # Credits page styles
-├── logo/Vit Bhopal Logo.png    # Official logo (WHITE on transparent - needs a dark background)
+├── logo/vit-bhopal-logo.png    # Official logo, navy on transparent (use on light backgrounds)
+├── logo/Vit Bhopal Logo.png    # Official logo, WHITE on transparent (use on dark backgrounds only)
 ├── tour-project/               # Main 360° tour
 │   ├── campus tour.html        # Tour page: Pannellum config (70 scenes), chroma-key guide videos
 │   ├── style1.css              # Tour UI styles (top bar, sidebar, toolbar, hotspots)
@@ -147,7 +148,7 @@ Since the application is built on static client technologies, compiling code or 
 
 ## Usage 📖
 
-1. **Enter the Campus Gateway:** On the landing page, read about the project scope, watch the media preview, and select "Enter Campus".
+1. **Enter the Campus Gateway:** On the landing page, read the overview, watch the campus video, then press "Start the tour" or pick a location card to open the tour at that place (cards use `campus tour.html?scene=<scene id>`).
 2. **Rotate and Look Around:** Click and drag using your mouse, or swipe on mobile screens, to rotate the panorama 360 degrees. Use the `+` and `-` controls in the toolbar to adjust your field of view.
 3. **Move to Adjacent Locations:** Identify hotspot overlays within the scene. Hovering over a hotspot displays the destination name. Clicking the hotspot triggers a fade transition to that location.
 4. **Utilize Quick Navigation:** Click the "Locations" button on the top left to open the sidebar. Click any location (e.g., Lab Complex, Girls Hostel, Food Court) to jump directly to that scene.
