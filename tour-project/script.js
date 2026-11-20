@@ -1,130 +1,138 @@
-function toggleSidebar() {
-  const sidebar = document.getElementById("sidebar");
-  const menuBtn = document.querySelector(".menu-btn");
+/* ==========================================================
+   VIT Bhopal – Virtual Campus Tour: UI controls
+   Relies on the global `viewer` and `tourConfig` created in
+   "campus tour.html". Dragging, touch, pinch and keyboard
+   navigation are handled natively by Pannellum.
+   ========================================================== */
 
-  sidebar.classList.toggle("active");
-  // Hide button when sidebar is open
-  if (sidebar.classList.contains("active")) {
-    menuBtn.style.display = "none";
-  } else {
-    menuBtn.style.display = "block";
-  }
+// ---------- Sidebar ----------
+const sidebar = document.getElementById("sidebar");
+const menuBtn = document.getElementById("menuBtn");
+
+function setSidebar(open) {
+  sidebar.classList.toggle("active", open);
+  menuBtn.setAttribute("aria-expanded", String(open));
 }
 
-let panInterval = null;
+menuBtn.addEventListener("click", () =>
+  setSidebar(!sidebar.classList.contains("active")),
+);
+document.getElementById("closeBtn").addEventListener("click", () => setSidebar(false));
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") setSidebar(false);
+});
 
-// Zoom functions
+// ---------- Scene buttons (sidebar + toolbar) ----------
+document.querySelectorAll("[data-scene]").forEach((el) => {
+  el.addEventListener("click", () => {
+    viewer.loadScene(el.dataset.scene);
+    setSidebar(false);
+  });
+});
+
+// ---------- Zoom / fullscreen ----------
+const ZOOM_STEP = 10;
+
 function zoomIn() {
-  viewer.setHfov(viewer.getHfov() - 10);
+  viewer.setHfov(viewer.getHfov() - ZOOM_STEP);
 }
+
 function zoomOut() {
-  viewer.setHfov(viewer.getHfov() + 10);
+  viewer.setHfov(viewer.getHfov() + ZOOM_STEP);
 }
 
-// Pan continuously
-function startPan(direction) {
-  stopPan(); // clear old
-  panInterval = setInterval(() => {
-    if (direction === 'up') viewer.setPitch(viewer.getPitch() + 20);
-    if (direction === 'down') viewer.setPitch(viewer.getPitch() - 20);
-    if (direction === 'left') viewer.setYaw(viewer.getYaw() - 20);
-    if (direction === 'right') viewer.setYaw(viewer.getYaw() + 20);
-    console.log("panning " + direction)
-  }, 30); // every 30ms
-}
-function stopPan() {
-  if (panInterval) {
-    clearInterval(panInterval);
-    panInterval = null;
-  }
-}
-
-// Fullscreen
 function toggleFullscreen() {
   if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen();
+    (document.documentElement.requestFullscreen || (() => {})).call(
+      document.documentElement,
+    );
   } else {
     document.exitFullscreen();
   }
 }
 
-// Home
-function goHome() {
-    window.open("https://vitbhopal.ac.in/", "_blank");
+document.querySelector('[data-action="zoom-in"]').addEventListener("click", zoomIn);
+document.querySelector('[data-action="zoom-out"]').addEventListener("click", zoomOut);
+document
+  .querySelector('[data-action="fullscreen"]')
+  .addEventListener("click", toggleFullscreen);
+
+// ---------- Hold-to-look arrow buttons ----------
+const PAN_SPEED = 60; // degrees per second
+let panFrame = null;
+
+function startPan(direction) {
+  stopPan();
+  let last = performance.now();
+
+  function step(now) {
+    const delta = (PAN_SPEED * (now - last)) / 1000;
+    last = now;
+    if (direction === "up") viewer.setPitch(viewer.getPitch() + delta);
+    if (direction === "down") viewer.setPitch(viewer.getPitch() - delta);
+    if (direction === "left") viewer.setYaw(viewer.getYaw() - delta);
+    if (direction === "right") viewer.setYaw(viewer.getYaw() + delta);
+    panFrame = requestAnimationFrame(step);
+  }
+  panFrame = requestAnimationFrame(step);
 }
 
-// Attach mouse + touch events
+function stopPan() {
+  if (panFrame) {
+    cancelAnimationFrame(panFrame);
+    panFrame = null;
+  }
+}
+
 function attachPanEvents(id, direction) {
   const btn = document.getElementById(id);
-
-  // Mouse hold
-  btn.addEventListener("mousedown", () => startPan(direction));
-  btn.addEventListener("mouseup", stopPan);
-  btn.addEventListener("mouseleave", stopPan);
-
-  // Touch hold (for mobile)
-  btn.addEventListener("touchstart", (e) => {
+  btn.addEventListener("pointerdown", (e) => {
     e.preventDefault();
     startPan(direction);
   });
-  btn.addEventListener("touchend", stopPan);
+  ["pointerup", "pointerleave", "pointercancel"].forEach((evt) =>
+    btn.addEventListener(evt, stopPan),
+  );
 }
 
-// Hook up
 attachPanEvents("btnUp", "up");
 attachPanEvents("btnDown", "down");
 attachPanEvents("btnLeft", "left");
 attachPanEvents("btnRight", "right");
 
+// ---------- Preload neighbouring scenes ----------
+// Once a scene has loaded, quietly fetch the panoramas its hotspots lead to,
+// so the next click opens instantly instead of waiting on the network.
+const preloaded = new Map();
+
+function preloadNeighbours() {
+  const scene = tourConfig.scenes[viewer.getScene()];
+  if (!scene || !scene.hotSpots) return;
+
+  scene.hotSpots.forEach((hs) => {
+    if (hs.type !== "scene") return;
+    const target = tourConfig.scenes[hs.sceneId];
+    if (!target || preloaded.has(target.panorama)) return;
+    const img = new Image();
+    img.decoding = "async";
+    img.src = target.panorama;
+    preloaded.set(target.panorama, img); // keep a reference so it stays cached
+  });
+}
+
+viewer.on("load", () => {
+  // wait a moment so preloading never competes with the scene being shown
+  setTimeout(preloadNeighbours, 400);
+});
+
 window.viewer = viewer;
-        let isDragging = false;
-        let lastX, lastY;
-        let velocityX = 0, velocityY = 0;
-        let momentumInterval;
 
-        const sensitivity = 0.3;   // increase for faster movement
-        const inertia = 0.95;      // closer to 1 = longer inertia
-
-        const canvas = document.querySelector('#panorama canvas');
-
-        // Mouse down
-        canvas.addEventListener('mousedown', (e) => {
-          isDragging = true;
-          lastX = e.clientX;
-          lastY = e.clientY;
-          clearInterval(momentumInterval);
-        });
-
-        // Mouse move
-        canvas.addEventListener('mousemove', (e) => {
-          if (!isDragging) return;
-
-          const dx = e.clientX - lastX;
-          const dy = e.clientY - lastY;
-
-          lastX = e.clientX;
-          lastY = e.clientY;
-
-          viewer.setYaw(viewer.getYaw() - dx * sensitivity);
-          viewer.setPitch(viewer.getPitch() + dy * sensitivity);
-
-          velocityX = dx * sensitivity;
-          velocityY = dy * sensitivity;
-        });
-
-// Mouse up (apply inertia)
-        canvas.addEventListener('mouseup', () => {
-          isDragging = false;
-
-          momentumInterval = setInterval(() => {
-            viewer.setYaw(viewer.getYaw() - velocityX);
-            viewer.setPitch(viewer.getPitch() + velocityY);
-
-            velocityX *= inertia;
-            velocityY *= inertia;
-
-            if (Math.abs(velocityX) < 0.01 && Math.abs(velocityY) < 0.01) {
-              clearInterval(momentumInterval);
-            }
-          }, 16); // ~60fps
-        });
+// ---------- First-visit hint ----------
+const hint = document.getElementById("hint");
+function hideHint() {
+  hint.classList.add("hidden");
+}
+setTimeout(hideHint, 7000);
+document.getElementById("panorama").addEventListener("pointerdown", hideHint, {
+  once: true,
+});

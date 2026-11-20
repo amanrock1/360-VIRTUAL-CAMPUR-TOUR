@@ -129,3 +129,21 @@
   border-radius: 6px;
   transform: scale(1.1);
 }
+
+/* Chroma Key Video Canvas */
+#chromaKeyCanvas {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  z-index: 500;
+  max-width: 50%;
+  max-height: 50%;
+  object-fit: contain;
+  pointer-events: none;
+  display: none;
+}
+
+/* Hidden video element */
+#videoElement {
+  display: none;
+}

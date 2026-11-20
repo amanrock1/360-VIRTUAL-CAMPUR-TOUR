@@ -63,34 +63,27 @@ graph TD
 
 ```
 .
-├── index.html                  # Main landing page and gateway portal
-├── style.css                   # Homepage layout, styling system, and animation rules
-├── main.js                     # Homepage interaction handlers and showcase controls
-├── Credits.html                # Project credits and developer acknowledgment page
-├── style1.css                  # Core CSS variables and styles
-├── Style2.css                  # UI enhancement rules
-├── styles3.css                 # Supplemental page styling
-├── navbarstyle.css             # Navigation bar layout rules
-├── footerstyle.css             # Footer structure and styling
-├── style2gallery.css           # Styling rules for preview showcases
-├── Vit Bhopal Logo.png         # Branding asset
-├── Chancellor.png              # Academic leadership asset
-├── tour-project/               # Main 360° Virtual Tour Module
-│   ├── campus tour.html        # Virtual tour interactive hub (Pannellum + Canvas integration)
-│   ├── style1.css              # Custom sidebar, control panel, and toolbar styling
-│   ├── script.js               # Helper scripts for scene parameters
-│   ├── *.jpg                   # High-resolution 360° equirectangular panoramic image files
-│   └── videos/                 # Guide videos filmed on green screens
-│       ├── Video Project 1 (1).mp4
-│       ├── ab1 with green croped.mp4
-│       ├── mph.mp4
-│       ├── lc to ar .mp4
-│       └── ab2.mp4
-├── vr_tour/                    # Stereoscopic Virtual Reality Module
-│   └── index.html              # Dual-viewer VR portal utilizing orientation sync
-├── logo/                       # Visual identity assets
-├── image copy/                 # Image backups and UI references
-└── Drone_Background/           # Media assets containing drone photography
+├── index.html                  # Landing page (hero, itinerary, map preview, contact, footer)
+├── style.css                   # Landing page styles (navy + gold theme)
+├── main.js                     # Landing page interactions (nav, showcase, modal, EmailJS form)
+├── Credits.html                # Team credits page
+├── styles3.css                 # Credits page styles
+├── logo/Vit Bhopal Logo.png    # Official logo (WHITE on transparent - needs a dark background)
+├── tour-project/               # Main 360° tour
+│   ├── campus tour.html        # Tour page: Pannellum config (70 scenes), chroma-key guide videos
+│   ├── style1.css              # Tour UI styles (top bar, sidebar, toolbar, hotspots)
+│   ├── script.js               # Tour UI controls + neighbour-scene preloading
+│   ├── scene-names.js          # Readable names for every scene and hotspot (edit names here)
+│   ├── *.jpg                   # 3584x1792 equirectangular panoramas (one per scene)
+│   ├── thumbs/                 # Flat 720x460 views for sidebar and itinerary
+│   ├── showcase/               # Flat 1600x1000 views for the landing page
+│   └── videos/                 # Green-screen guide videos + preview video
+├── vr_tour/                    # Stereoscopic VR mode
+│   ├── index.html              # Dual-viewer VR page (has its own copy of the scene config)
+│   └── vr-style.css            # VR page styles (independent of the tour styles)
+├── image copy/                 # README screenshots and Credits page photos
+├── Drone_Background/           # Drone video (currently not used by any page)
+└── Chancellor.png              # Leadership image (currently not used by any page)
 ```
 
 ---
@@ -130,8 +123,8 @@ Since the application is built on static client technologies, compiling code or 
 1. **Enter the Campus Gateway:** On the landing page, read about the project scope, watch the media preview, and select "Enter Campus".
 2. **Rotate and Look Around:** Click and drag using your mouse, or swipe on mobile screens, to rotate the panorama 360 degrees. Use the `+` and `-` controls in the toolbar to adjust your field of view.
 3. **Move to Adjacent Locations:** Identify hotspot overlays within the scene. Hovering over a hotspot displays the destination name. Clicking the hotspot triggers a fade transition to that location.
-4. **Utilize Quick Navigation:** Click the "☰ HOTSPOT" button on the top left of the screen to open the sidebar. Click any location label (e.g., Learning Center, Girls Hostel, Food Court) to warp directly to that scene.
-5. **Activate VR Mode:** Click the VR goggles icon (🕶) in the bottom toolbar. Insert your mobile device into a VR viewer (e.g., Google Cardboard) to explore the campus using dual-pane stereo views.
+4. **Utilize Quick Navigation:** Click the "Locations" button on the top left to open the sidebar. Click any location (e.g., Lab Complex, Girls Hostel, Food Court) to jump directly to that scene.
+5. **Activate VR Mode:** Click the VR headset icon in the bottom toolbar. Insert your mobile device into a VR viewer (e.g., Google Cardboard) to explore the campus using dual-pane stereo views.
 
 ---
 
@@ -172,10 +165,12 @@ Since the application is built on static client technologies, compiling code or 
 
 ## Performance Optimizations ⚡
 
-- **On-Demand Loading:** Panoramic assets are not loaded simultaneously. The engine requests the equirectangular image file only when its corresponding scene is loaded.
-- **Dynamic Canvas Constraints:** Executing real-time pixel extraction on 1080p video frames causes high CPU usage. The pipeline scales the video frame onto a hidden canvas capped at a maximum width of 640 pixels prior to performing color extraction.
-- **Frame Rate Synchronization:** Chroma key extraction loops are driven by `requestAnimationFrame`. This binds processing calculations to the monitor's native refresh rate, mitigating background tab CPU utilization.
-- **Adaptive Layout System:** Media queries and CSS viewport scaling unit rules (such as `dvh` and `vw`) adjust button sizes and sidebar spacing dynamically to avoid breaking layouts on small screens.
+- **Compressed media:** panoramas are JPEG quality ~4 (about 35% smaller than the originals with no visible loss); the drone video is 1080p H.264 (29 MB to 11 MB).
+- **Neighbour preloading:** after a scene loads, `script.js` quietly fetches the panoramas its hotspots lead to, so the next click opens instantly.
+- **On-demand loading:** only the current scene is fetched up front; guide videos use `preload="metadata"`.
+- **Undistorted flat images for the website:** the landing page uses small flat renders (`thumbs/`, `showcase/`) instead of raw 360° panoramas, so the page loads fast and looks sharp.
+- **Cheaper chroma key:** the keying canvas is capped at 640 px wide (360 px on phones) and driven by `requestAnimationFrame`.
+- **Phone-friendly UI:** no backdrop blur over the live panorama on touch devices, GPU-only hotspot animation, hover effects only on devices with a real pointer, and `100dvh` layouts.
 
 ---
 
