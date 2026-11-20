@@ -13,11 +13,12 @@
     />
     <meta name="theme-color" content="#2c3370" />
     <link rel="icon" href="../logo/Vit Bhopal Logo.png" type="image/png" />
+    <script src="device.js"></script>
     <!-- Start downloading the first scene right away, before any script has run -->
     <script>
       (function () {
         var id = new URLSearchParams(location.search).get("scene") || "exit 1";
-        [["previews/", "image"], ["", "image"]].forEach(function (p) {
+        [["previews/", "image"], [LITE_IMAGES ? "lite/" : "", "image"]].forEach(function (p) {
           var l = document.createElement("link");
           l.rel = "preload";
           l.as = p[1];

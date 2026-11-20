@@ -1667,8 +1667,12 @@ for (let sceneKey in tourConfig.scenes) {
   }
 }
 
-// Low-resolution placeholder shown immediately while the full panorama loads.
+// Low-resolution placeholder shown immediately while the panorama loads, and the
+// smaller "lite" panorama on phones / slow connections (see device.js).
+const useLite = typeof LITE_IMAGES !== "undefined" && LITE_IMAGES;
 for (const sceneKey in tourConfig.scenes) {
   const scene = tourConfig.scenes[sceneKey];
-  scene.preview = "previews/" + scene.panorama;
+  const file = scene.panorama;
+  scene.preview = "previews/" + file;
+  if (useLite) scene.panorama = "lite/" + file;
 }

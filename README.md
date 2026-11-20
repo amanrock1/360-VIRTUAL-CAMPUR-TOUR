@@ -74,6 +74,8 @@ graph TD
 │   ├── campus tour.html        # Tour page: starts Pannellum, chroma-key guide videos
 │   ├── scenes-data.js          # SHARED scene data (70 scenes + hotspots), used by the tour and VR mode
 │   ├── vendor/pannellum/       # Self-hosted Pannellum 2.5.6 (no CDN dependency)
+│   ├── device.js               # Picks the lite (phones / slow networks) or full panorama set
+│   ├── lite/                   # 2560 px panoramas (~0.5 MB each) used on phones
 │   ├── previews/               # 640 px previews shown instantly while a panorama downloads
 │   ├── style1.css              # Tour UI styles (top bar, sidebar, toolbar, hotspots)
 │   ├── script.js               # Tour UI controls + neighbour-scene preloading
@@ -111,7 +113,7 @@ Read in this order: this README, then [`CLAUDE.md`](CLAUDE.md) (how the code is 
 **Adding a new scene**
 1. Put the equirectangular panorama in `tour-project/` as `<scene id>.jpg` (about 3584x1792, JPEG quality ~4).
 2. Add a block for it in `tourConfig.scenes` in `scenes-data.js`, with `panorama: pfile("<scene id>")` and its `hotSpots`.
-   Also create a 640 px preview: `previews/<scene id>.jpg` (see `CLAUDE.md` for the ffmpeg command).
+   Also create a 640 px preview `previews/<scene id>.jpg` and a 2560 px phone version `lite/<scene id>.jpg` (see `CLAUDE.md` for the ffmpeg commands).
 3. Add a hotspot **back** from each neighbouring scene (the arrival direction is calculated from these pairs).
 4. Add a naming rule in `scene-names.js` if it is a new place, so it shows a readable title.
 5. Optional: add a thumbnail in `tour-project/thumbs/` and a button in the sidebar markup.
@@ -198,6 +200,7 @@ Since the application is built on static client technologies, compiling code or 
 
 ## Performance Optimizations ⚡
 
+- **Lite panoramas for phones:** phones and slow or data-saving connections automatically load the 2560 px set in `tour-project/lite/` (about 0.5 MB per scene) instead of the 3584 px originals (about 1.2 MB). Force one with `?quality=lite` or `?quality=full`.
 - **Compressed media:** panoramas are JPEG quality ~4 (about 35% smaller than the originals with no visible loss); the drone video is 1080p H.264 (29 MB to 11 MB).
 - **Neighbour preloading:** after a scene loads, `script.js` quietly fetches the panoramas its hotspots lead to, so the next click opens instantly.
 - **On-demand loading:** only the current scene is fetched up front; guide videos use `preload="metadata"`.

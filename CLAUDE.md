@@ -19,6 +19,7 @@ There are no tests or linters. Verify by: `node --check <file>.js`, confirming r
 ## Layout
 - `index.html`, `style.css`, `main.js` - landing page (light theme matching vitbhopal.ac.in; no frameworks, no Font Awesome). `Credits.html` + `styles3.css` - credits.
 - `tour-project/scenes-data.js` - **single source of truth for scenes**: `pfile()`, `tourConfig` (70 scenes, hotspots), the arrival-direction calculation and a `preview` image per scene. Loaded by both the tour and VR mode.
+- `tour-project/device.js` - sets `LITE_IMAGES` (phones, 2g/3g, Data Saver, or `?quality=lite`). `scenes-data.js` then points each scene at `lite/<file>` (2560 px) instead of `<file>` (3584 px). Must load before `scenes-data.js`; the tour page head also uses it to preload the right first image.
 - `tour-project/campus tour.html` - the tour page: reads `?scene=`, applies names, starts Pannellum (self-hosted in `vendor/pannellum/`), then the chroma-key guide-video logic.
 - `tour-project/script.js` - UI controls (sidebar, zoom, fullscreen, hold-to-look arrows) and neighbour-scene preloading. Loaded after the inline script; relies on globals `viewer` and `tourConfig`.
 - `tour-project/scene-names.js` - **the only place scene/hotspot display names live.** `applySceneNames(tourConfig)` runs before the viewer is created.
@@ -39,6 +40,7 @@ There are no tests or linters. Verify by: `node --check <file>.js`, confirming r
 ## Performance notes
 - First view must appear fast: every scene has a ~22 KB `previews/<file>.jpg` (Pannellum `preview`), the first scene is preloaded from the page head, neighbouring scenes are preloaded after each load, and Pannellum is self-hosted. Preloads and `new Image()` use `crossOrigin = "anonymous"` to match how Pannellum requests images so the browser cache is reused.
 - The source panoramas are 3584 px wide and slightly soft; compression is not the limit. Panoramas are encoded at `-q:v 3` with a mild `unsharp`.
+- **Vercel preview URLs are login-protected** (Deployment Protection): every request, including images, redirects to vercel.com/sso-api. Pannellum loads images with XHR, which that redirect breaks, so previews show "exit 1.jpg could not be accessed" and cannot be used for speed tests. Test on the production domain, on a local server over Wi-Fi, or switch Deployment Protection off for previews in the Vercel project settings.
 - Do not add `vercel.json` cache headers without care: JS, CSS and HTML are not content-hashed, so long cache times would serve stale pages after an update.
 
 ## Media pipeline (ffmpeg is available)
@@ -46,7 +48,9 @@ Panoramas must be regenerated from the **original** files in git history (commit
 ```
 ffmpeg -i original.jpg -vf unsharp=5:5:0.6:5:5:0.0 -q:v 3 -huffman optimal -pix_fmt yuvj420p out.jpg
 ffmpeg -i original.jpg -vf scale=640:-2 -q:v 6 -huffman optimal -pix_fmt yuvj420p previews/out.jpg
+ffmpeg -i original.jpg -vf scale=2560:1280:flags=lanczos,unsharp=5:5:0.5:5:5:0.0 -q:v 4 -huffman optimal -pix_fmt yuvj420p lite/out.jpg
 ```
+Every scene needs all three files (full, `lite/`, `previews/`).
 Flat renders from a panorama (yaw must be within -180..180):
 ```
 ffmpeg -i pano.jpg -vf "v360=input=e:output=flat:h_fov=85:v_fov=55:yaw=0:pitch=-2:w=720:h=460:interp=cubic" -q:v 3 out.jpg

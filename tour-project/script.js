@@ -106,6 +106,7 @@ attachPanEvents("btnRight", "right");
 const preloaded = new Map();
 
 function preloadNeighbours() {
+  if (navigator.connection && navigator.connection.saveData) return; // respect Data Saver
   const scene = tourConfig.scenes[viewer.getScene()];
   if (!scene || !scene.hotSpots) return;
 
