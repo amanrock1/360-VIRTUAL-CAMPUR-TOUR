@@ -27,6 +27,15 @@ Living notes on the state of this project: what was decided, why, and what is st
 - **Cleanup:** removed unreferenced backups and old CSS; VR mode has its own `vr-style.css`; `tour-project/avatar.webp` deleted.
 - **Git:** one push of this branch was made earlier at the owner's request. The owner then said **do not push anything to GitHub; they will push themselves.** `main` was never touched. Everything since is committed locally only.
 
+## Round 3: speed, image quality and real VR
+- **Owner feedback:** preview was still slow (stuck on the loading screen for 3-4 s), image quality should improve, and the VR mode was only split screen, never checked as real VR.
+- **Speed:** every scene now has a ~22 KB preview (shown instantly while the 1.2 MB panorama loads); the first scene is preloaded from the page head; Pannellum 2.5.6 is self-hosted (no CDN round trip); preloads use matching CORS mode so they are reused; scene data moved out of the 2,100-line tour page into `tour-project/scenes-data.js` (page is now ~520 lines).
+- **Image quality:** the originals are 3584 px phone panoramas and are inherently soft, so compression was never the main limit. Re-encoded from the originals at higher quality (q3) with a mild sharpen (panoramas ~63 MB to ~83 MB total). A real improvement needs re-shooting or higher-resolution captures.
+- **VR was not real VR:** the old page used two Pannellum viewers: no gyroscope, no lens correction, no fullscreen/landscape lock, and on-screen buttons that cannot be pressed in a headset. **Rebuilt** as `vr_tour/vr.js` (WebGL2): stereo, lens correction, head tracking, gaze selection (1.5 s dwell), exit by looking down (2 s), tap to re-centre, fullscreen + landscape + wake lock, iOS motion-permission flow, instant previews, neighbour preloading.
+- **Verified:** stereo, preview and start screens rendered in headless Chrome (orientation matches the standard tour); gyroscope math unit-checked against known poses (turn left/right, tilt up/down, landscape, orthonormal basis).
+- **NOT verified (needs a real phone + headset):** actual gyroscope behaviour and drift, frame rate on mid-range phones, whether the lens-correction strength suits the owner's headset (tunable: `LENS_K1/K2`, or untick "Lens correction"), fullscreen/landscape lock on iOS (iOS Safari cannot lock orientation or fullscreen a page; the user must rotate manually), comfort. The old guide videos are not shown in VR.
+- **Requires WebGL2** (iOS 15+, any current Android Chrome); other browsers get a link back to the standard tour.
+
 ## Open items / need the owner's input
 - **Guessed scene names** (confirm in `scene-names.js`): Flag Point, Central Walkway, Central Junction, Parcel Area, Hostel Entrance. `ab N` walkway scenes are all labelled "Academic Block 1"; `ab 15` is "Food Court" (as in the original menu).
 - **Card descriptions** on the landing page were trimmed from the team's earlier text ("Laboratory facilities and computing centres", "Hosts institutional activities, sports and cultural events", etc.); have someone at VIT confirm them.
@@ -34,7 +43,6 @@ Living notes on the state of this project: what was decided, why, and what is st
 - **Footer line** "Virtual tour created by students of VIT Bhopal University" and the Credits page: confirm wording and whether the Credits page should stay.
 - **README claims an MIT licence** and links `LICENSE`, but no LICENSE file exists. The university must decide the licence.
 - **Folder naming left alone on purpose** (`tour-project/` mixes ~95 images, HTML, JS, CSS, videos; `image copy/`; `campus tour.html` has a space). Renaming would break existing links.
-- **VR mode** still shows raw hotspot labels and keeps a duplicated scene config.
 - **Integration with vitbhopal.ac.in:** decide where it is hosted (separate site linked from the official page, or embedded) and update the Vercel/DNS side. The tour needs HTTPS and must not be blocked by the official site's iframe/CSP rules if embedded.
 - Unused media: `Drone_Background/videodrone.mp4` (11 MB), `Chancellor.png`, root `Vit Bhopal Logo.png` (duplicate of `logo/`), ~16 unused images in `tour-project/`.
 - Possible future work: tiled or higher-resolution panoramas, narrated guide for every location, background music, a real campus map, an accessibility audit, a `scenes.json` to replace the hand-written config, real-device phone testing.

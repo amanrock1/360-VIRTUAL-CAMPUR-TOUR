@@ -115,6 +115,7 @@ function preloadNeighbours() {
     if (!target || preloaded.has(target.panorama)) return;
     const img = new Image();
     img.decoding = "async";
+    img.crossOrigin = "anonymous"; // match Pannellum so the cached file is reused
     img.src = target.panorama;
     preloaded.set(target.panorama, img); // keep a reference so it stays cached
   });
@@ -124,6 +125,14 @@ viewer.on("load", () => {
   // wait a moment so preloading never competes with the scene being shown
   setTimeout(preloadNeighbours, 400);
 });
+
+// ---------- VR button keeps the current location ----------
+const vrLink = document.querySelector('a[href^="../vr_tour/index.html"]');
+function updateVrLink() {
+  if (vrLink) vrLink.href = "../vr_tour/index.html?scene=" + encodeURIComponent(viewer.getScene());
+}
+viewer.on("load", updateVrLink);
+viewer.on("scenechange", updateVrLink);
 
 window.viewer = viewer;
 
