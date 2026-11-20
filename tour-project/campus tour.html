@@ -185,6 +185,19 @@
     <canvas id="chromaKeyCanvas"></canvas>
 
     <script>
+      /* ======================================================================
+         HOW THIS FILE IS ORGANISED
+         1. tourConfig        - every scene (panorama file + hotspots to other
+                                scenes). Scene ids are file names; keep their
+                                exact spelling (some have double spaces).
+         2. Post-processing   - works out the facing direction on arrival, then
+                                scene-names.js replaces titles/labels with
+                                readable names. Edit names there, not here.
+         3. pannellum.viewer  - creates the viewer.
+         4. Chroma-key guide  - plays green-screen guide videos on certain
+                                scenes and removes the green on a <canvas>.
+         UI controls (sidebar, zoom, toolbar) live in script.js.
+         ====================================================================== */
       function pfile(name) {
         return name + ".jpg";
       }

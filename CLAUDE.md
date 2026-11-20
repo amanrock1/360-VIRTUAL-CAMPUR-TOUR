@@ -44,4 +44,6 @@ ffmpeg -i pano.jpg -vf "v360=input=e:output=flat:h_fov=85:v_fov=55:yaw=0:pitch=-
 ```
 
 ## Git
-Work on branches; `main` auto-deploys to production. Do not merge to `main` without the owner's go-ahead.
+**Never push anything to GitHub** (any branch, any remote change) unless the owner explicitly asks in that moment. Commit locally only. `main` auto-deploys to production on Vercel, and this site feeds the official VIT Bhopal page. Never merge to `main`.
+
+Test phone layouts by loading a page inside a 390px-wide `<iframe>` in headless Chrome (headless Chrome itself will not go narrower than about 500px).

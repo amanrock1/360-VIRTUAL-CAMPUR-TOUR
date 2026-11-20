@@ -34,7 +34,7 @@
 }
 
 .sidebar-header .highlight {
-  color: #6a5acd;
+  color: #f2a900;
 }
 
 .close-btn {
@@ -87,7 +87,7 @@
   border-radius: 8px;
   font-size: 18px;
   cursor: pointer;
-  background: linear-gradient(135deg, #6a5acd, #836fff);
+  background: linear-gradient(135deg, #0b2a5b, #123f87);
   color: white;
   font-weight: bold;
   z-index: 1001;

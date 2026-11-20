@@ -21,7 +21,15 @@ Living notes on the state of this project: what was decided, why, and what is st
 - **Naming:** all scene titles/hotspot labels come from `scene-names.js` (LC = Lab Complex, AB = Academic Block, MPH = Multipurpose Hall, AR/arch = Architecture Block).
 - **Cleanup:** removed unreferenced backups and old CSS (`index_backup.html`, `style_backup.css`, `1.cpp`, `Style2.css`, `style2gallery.css`, `navbarstyle.css`, `footerstyle.css`, root `style1.css`, `tour-project/Style3.css`). VR mode now has its own `vr-style.css`.
 
+## Later fixes (after the first push)
+- **Phone layout:** the landing hero had no side padding at 480px and below (buttons touched the screen edges); fixed. Itinerary timeline is stacked on phones and side by side on desktop (the one-row fix is desktop-only; applying it everywhere had made phone text overlap photos).
+- **Theme:** Credits page and VR mode recoloured from purple/magenta to navy and gold.
+- **Docs:** README now has a "Start Here" guide and a recipe for adding a scene; the tour page has an orientation comment.
+- **Git:** one push of branch `improve/performance-and-polish` was made at the owner's request. The owner then said **do not push anything to GitHub**. `main` was never touched. Commits since then are local only.
+
 ## Open items / need the owner's input
+- **README claims an MIT licence** and links `LICENSE`, but no LICENSE file exists. The owner/university must decide the licence; do not invent one.
+- **Folder naming is awkward but left alone on purpose** (`tour-project/` mixes ~95 images, HTML, JS, CSS and videos; `image copy/`; `campus tour.html` has a space). Renaming would break any existing links to the live URLs, so it needs an owner decision.
 - **Guessed scene names** (confirm or correct in `scene-names.js`): Flag Point, Central Walkway, Central Junction, Parcel Area, Hostel Entrance. Also `ab N` walkway scenes are all labelled "Academic Block 1", and `ab 15` is labelled "Food Court" (as in the original menu).
 - **Unverified wording on the landing page:** "250-acre campus", "CALTECH classrooms", "India's premier technology university", the phone number and email addresses.
 - **"Guided by AI Avatar" card** uses a photo of a real-looking person (`tour-project/avatar.webp`); confirm it is approved for an official page.

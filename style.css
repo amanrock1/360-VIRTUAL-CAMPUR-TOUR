@@ -1388,17 +1388,33 @@ section {
     }
     
     .hero-content {
-        padding: 0;
+        padding: 0 1.25rem;
     }
     
     .hero-showcase {
         height: 300px;
     }
+
+    .hero-ctas {
+        gap: 0.75rem;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        flex: 1;
+        padding: 0.9rem 1rem;
+        font-size: 0.95rem;
+        white-space: nowrap;
+        text-align: center;
+    }
 }
 
-/* Keep marker, photo and text on one row (items were wrapping onto a second row) */
-.timeline-step > * {
-    grid-row: 1;
+/* Desktop: keep marker, photo and text on one row (they were wrapping onto a second row).
+   On tablets/phones the items intentionally stack, so this must not apply there. */
+@media (min-width: 1025px) {
+    .timeline-step > * {
+        grid-row: 1;
+    }
 }
 
 .map-info-box .section-title {

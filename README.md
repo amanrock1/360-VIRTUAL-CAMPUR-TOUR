@@ -50,7 +50,7 @@ The application structure consists of a presentation layer, a coordinate sync la
 
 ```mermaid
 graph TD
-    UI[User Interface Layer: HTML5/CSS3/Vanilla JS] --> SML[Scene Management Layer: main.js / tour-project/campus tour.html]
+    UI[User Interface Layer: HTML5/CSS3/Vanilla JS] --> SML[Scene Management Layer: tour-project/campus tour.html + script.js + scene-names.js]
     SML --> PRE[Panorama Rendering Engine: Pannellum API]
     SML --> CK[Chroma-Key Video Engine: HTML5 Canvas API]
     PRE --> AS[Asset Storage: 360° Equirectangular Images]
@@ -85,6 +85,33 @@ graph TD
 ├── Drone_Background/           # Drone video (currently not used by any page)
 └── Chancellor.png              # Leadership image (currently not used by any page)
 ```
+
+---
+
+## Start Here (for new contributors) 🧭
+
+Read in this order: this README, then [`CLAUDE.md`](CLAUDE.md) (how the code is laid out and the gotchas) and [`CONTEXT.md`](CONTEXT.md) (what was done, and what is still undecided).
+
+**Where things live**
+
+| I want to... | Go to |
+| :--- | :--- |
+| Change the text or sections of the landing page | `index.html` (styles in `style.css`, behaviour in `main.js`) |
+| Rename a place or fix a hotspot label | `tour-project/scene-names.js` |
+| Change the tour buttons, sidebar, or colours | `tour-project/campus tour.html` (markup), `tour-project/style1.css` (look), `tour-project/script.js` (behaviour) |
+| Add or change a scene, or a link between scenes | The `tourConfig` object inside `tour-project/campus tour.html` |
+| Change the guide (green-screen) videos | `tour-project/videos/` and the chroma-key section at the bottom of `campus tour.html` |
+| Change VR mode | `vr_tour/index.html` (it keeps its **own copy** of the scene list) |
+
+**Adding a new scene**
+1. Put the equirectangular panorama in `tour-project/` as `<scene id>.jpg` (about 3584x1792, JPEG quality ~4).
+2. Add a block for it in `tourConfig.scenes` in `campus tour.html`, with `panorama: pfile("<scene id>")` and its `hotSpots`.
+3. Add a hotspot **back** from each neighbouring scene (the arrival direction is calculated from these pairs).
+4. Add a naming rule in `scene-names.js` if it is a new place, so it shows a readable title.
+5. Optional: add a thumbnail in `tour-project/thumbs/` and a button in the sidebar markup.
+6. Repeat in `vr_tour/index.html` if it should appear in VR.
+
+Scene ids are file names and some contain double spaces (for example `ab2  3`). Keep them exactly as they are.
 
 ---
 
