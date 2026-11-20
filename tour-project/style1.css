@@ -654,3 +654,17 @@ a:focus-visible {
     display: none;
   }
 }
+
+/* ---------- Motion (gyroscope) button ---------- */
+[hidden] {
+  display: none !important;
+}
+
+.bottom-toolbar button.active {
+  background: var(--accent, #f2ad4a);
+  color: var(--primary-deep, #151a3e);
+}
+
+.bottom-toolbar button.active:active {
+  background: #fff;
+}

@@ -158,7 +158,7 @@ Since the application is built on static client technologies, compiling code or 
 ## Usage 
 
 1. **Enter the Campus Gateway:** On the landing page, read the overview, watch the campus video, then press "Start the tour" or pick a location card to open the tour at that place (cards use `campus tour.html?scene=<scene id>`).
-2. **Rotate and Look Around:** Click and drag using your mouse, or swipe on mobile screens, to rotate the panorama 360 degrees. Use the `+` and `-` controls in the toolbar to adjust your field of view.
+2. **Rotate and Look Around:** Click and drag using your mouse, or swipe on mobile screens, to rotate the panorama 360 degrees. **On a phone or tablet the tour also follows the device's motion sensor (gyroscope):** move the phone to look around. The phone icon in the toolbar turns this on or off (iPhones ask for motion permission on the first tap). This needs HTTPS, so it works on the deployed site but not on plain `http://` addresses other than localhost. Use the `+` and `-` controls in the toolbar to adjust your field of view.
 3. **Move to Adjacent Locations:** Identify hotspot overlays within the scene. Hovering over a hotspot displays the destination name. Clicking the hotspot triggers a fade transition to that location.
 4. **Utilize Quick Navigation:** Click the "Locations" button on the top left to open the sidebar. Click any location (e.g., Lab Complex, Girls Hostel, Food Court) to jump directly to that scene.
 5. **Read about a place:** amber circles with an "i" appear on buildings (entrance gate, Lab Complex, Academic Blocks, Architecture Block, MPH, hostel, food court). Click or tap one to open a short information card with a link to the matching page on vitbhopal.ac.in.

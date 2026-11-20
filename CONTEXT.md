@@ -45,6 +45,13 @@ Living notes on the state of this project: what was decided, why, and what is st
 - **Confirm with VIT:** the **MPH** text (the official site describes indoor courts and sports generally but does not describe the MPH itself; the sentence "hosts indoor sports and student activities" comes from the team's earlier copy plus a search result about sports trials held there), and that the Hostels card is acceptable on the Girls Hostel approach scene.
 - **Not done:** pop-ups inside VR mode (would need gaze selection of "i" circles); Lion Park / Flag Point / Parcel Area cards.
 
+## Round 6: gyroscope in the standard tour
+- **Request:** on a phone the tour should use the phone's motion sensor, not only dragging.
+- **Built:** a toolbar button (phone icon, amber when active) and automatic start on phones/tablets. Move the phone to look around; dragging still works (the drag becomes the new reference); after each step to a new location the view is re-aimed on the arrival direction and then follows the phone again. Sensor readings are lightly smoothed. Android turns it on by itself; iPhones need one tap to grant motion permission. The choice to switch it off is remembered. If no sensor events arrive within 2.5 s the button hides and a hint says to drag instead.
+- **Why not Pannellum's built-in motion:** it only switches on for https mobile user agents, its button is hidden by our custom controls, and it cannot re-aim the view after each scene change.
+- **Verified (headless Chrome with simulated sensor events, not a real device):** turning the phone 60 degrees right moves the view to 60 degrees and back to 40 degrees exactly; the view matches opening the scene at that yaw pixel for pixel; re-aiming after a scene change works; the extra button fits at 390 px and 320 px wide. **Not verified on a real phone:** sensor noise and drift, feel of the 0.4 smoothing factor, behaviour on iOS Safari. Needs HTTPS (works on the Vercel site, not on plain http://<ip> tests).
+- **Lesson:** headless Chrome barely schedules animation frames, so a requestAnimationFrame-based test was misleading; the motion is applied per sensor event instead.
+
 ## Open items / need the owner's input
 - **Guessed scene names** (confirm in `scene-names.js`): Flag Point, Central Walkway, Central Junction, Parcel Area, Hostel Entrance. `ab N` walkway scenes are all labelled "Academic Block 1"; `ab 15` is "Food Court" (as in the original menu).
 - **Card descriptions** on the landing page were trimmed from the team's earlier text ("Laboratory facilities and computing centres", "Hosts institutional activities, sports and cultural events", etc.); have someone at VIT confirm them.
