@@ -1,0 +1,256 @@
+/* ==========================================================
+   VIT Bhopal - VR mode
+   ========================================================== */
+
+:root {
+  --primary: #2c3370;
+  --dark: #202653;
+  --deep: #151a3e;
+  --accent: #f2ad4a;
+  --font: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #000;
+  color: #fff;
+  font-family: var(--font);
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
+#gl {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  display: block;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* ---------- Start screen ---------- */
+.start {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(21, 26, 62, 0.94);
+  overflow-y: auto;
+  touch-action: pan-y;
+}
+
+.panel {
+  width: 100%;
+  max-width: 520px;
+  margin: auto;
+  padding: 8px 4px;
+}
+
+.logo {
+  display: block;
+  width: 130px;
+  height: auto;
+  margin-bottom: 18px;
+}
+
+h1 {
+  margin: 0 0 6px;
+  font-size: 1.9rem;
+  line-height: 1.15;
+}
+
+.lead {
+  margin: 0 0 14px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.steps {
+  margin: 0 0 18px;
+  padding-left: 1.2rem;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.steps li {
+  margin-bottom: 4px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.btn {
+  padding: 12px 20px;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  border-radius: 6px;
+  background: transparent;
+  color: #fff;
+  font: 700 1rem/1.2 var(--font);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.btn.primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--deep);
+}
+
+.opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.opt input {
+  margin-top: 3px;
+}
+
+.back {
+  margin: 16px 0 0;
+  font-size: 0.9rem;
+}
+
+.back a,
+.unsupported a {
+  color: #fff;
+}
+
+/* ---------- In-view elements ---------- */
+.eye-label {
+  position: fixed;
+  bottom: 14%;
+  z-index: 10;
+  transform: translateX(-50%);
+  padding: 5px 12px;
+  border-radius: 6px;
+  background: rgba(21, 26, 62, 0.85);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.eye-label.show {
+  opacity: 1;
+}
+
+.hud {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hud button {
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 8px;
+  background: rgba(21, 26, 62, 0.88);
+  color: #fff;
+  font: 700 0.9rem var(--font);
+  cursor: pointer;
+}
+
+#hudName {
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(21, 26, 62, 0.88);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  top: 14%;
+  z-index: 25;
+  transform: translateX(-50%);
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(21, 26, 62, 0.9);
+  font-size: 0.9rem;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.toast.show {
+  opacity: 1;
+}
+
+.rotate {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--deep);
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+body.vr .rotate.needed {
+  display: flex;
+}
+
+.unsupported {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--deep);
+  text-align: center;
+}
+
+@media (max-height: 460px) {
+  .logo {
+    width: 90px;
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+  }
+
+  .steps {
+    font-size: 0.85rem;
+  }
+}
